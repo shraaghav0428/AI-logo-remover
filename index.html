@@ -7,17 +7,13 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #fff; color: #111; min-height: 100vh; }
-
-    /* ── Layout ── */
     .header { border-bottom: 1px solid #f0f0f0; padding: 14px 24px; }
-    .header-inner { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+    .header-inner { max-width: 580px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
     .logo-icon { width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .app-title { font-size: 14px; font-weight: 600; }
     .app-sub { font-size: 11px; color: #9ca3af; margin-top: 1px; }
-    .main { max-width: 560px; margin: 0 auto; padding: 36px 24px 100px; }
-
-    /* ── Step indicator ── */
-    .steps { display: flex; align-items: center; justify-content: center; max-width: 440px; margin: 0 auto 36px; }
+    .main { max-width: 580px; margin: 0 auto; padding: 32px 24px 100px; }
+    .steps { display: flex; align-items: center; justify-content: center; max-width: 440px; margin: 0 auto 32px; }
     .step { display: flex; flex-direction: column; align-items: center; }
     .step-dot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; transition: all 0.2s; }
     .step-dot.done { background: #2563eb; color: #fff; }
@@ -29,23 +25,17 @@
     .step-line { flex: 1; height: 1px; margin: 0 6px; margin-bottom: 18px; }
     .step-line.done-line { background: #2563eb; }
     .step-line.todo-line { background: #e5e7eb; }
-
-    /* ── Panels ── */
     .panel { display: none; }
     .panel.show { display: block; }
     .panel h2 { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
-    .panel .sub { font-size: 13px; color: #6b7280; margin-bottom: 22px; }
-
-    /* ── Drop zone ── */
-    .dropzone { border: 2px dashed #e5e7eb; border-radius: 12px; padding: 44px 20px; text-align: center; cursor: pointer; transition: all 0.15s; }
+    .panel .sub { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+    .dropzone { border: 2px dashed #e5e7eb; border-radius: 12px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.15s; }
     .dropzone:hover, .dropzone.over { border-color: #2563eb; background: #eff6ff; }
     .dz-icon { width: 44px; height: 44px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; transition: background 0.15s; }
     .dropzone:hover .dz-icon, .dropzone.over .dz-icon { background: #dbeafe; }
     .dz-main { font-size: 14px; font-weight: 500; color: #374151; }
     .dz-main span { color: #2563eb; }
     .dz-hint { font-size: 12px; color: #9ca3af; margin-top: 3px; }
-
-    /* ── File list ── */
     .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 7px; }
     .file-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 9px; }
     .file-ico { width: 30px; height: 30px; background: #fef2f2; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -54,25 +44,23 @@
     .file-size { font-size: 11px; color: #9ca3af; }
     .remove-btn { background: none; border: none; cursor: pointer; color: #d1d5db; padding: 4px; border-radius: 4px; line-height: 0; flex-shrink: 0; }
     .remove-btn:hover { color: #ef4444; }
-
-    /* ── Buttons ── */
     .btn { width: 100%; padding: 13px 20px; border-radius: 11px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; }
     .btn-primary { background: #2563eb; color: #fff; }
     .btn-primary:hover:not(:disabled) { background: #1d4ed8; }
     .btn-primary:active:not(:disabled) { transform: scale(0.99); }
     .btn-primary:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
     .btn-outline { background: #fff; color: #374151; border: 1px solid #e5e7eb; }
-    .btn-outline:hover { background: #f9fafb; }
+    .btn-outline:hover:not(:disabled) { background: #f9fafb; }
+    .btn-outline:disabled { color: #9ca3af; cursor: not-allowed; }
+    .btn-ghost { background: none; border: none; color: #2563eb; font-size: 13px; font-weight: 500; cursor: pointer; padding: 6px 0; width: auto; }
+    .btn-ghost:hover { text-decoration: underline; }
     .mt20 { margin-top: 20px; }
+    .mt12 { margin-top: 12px; }
     .mt10 { margin-top: 10px; }
     .btn-row { display: flex; gap: 8px; margin-top: 20px; }
     .btn-row .btn-outline { flex: 1; }
     .btn-row .btn-primary { flex: 2; }
-
-    /* ── Error inline ── */
     .err-inline { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #dc2626; margin-top: 8px; }
-
-    /* ── Scanning progress ── */
     .scan-progress { margin-bottom: 8px; }
     .scan-top { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
     .scan-label { color: #374151; }
@@ -80,24 +68,30 @@
     .prog-bg { background: #f3f4f6; border-radius: 99px; height: 5px; overflow: hidden; }
     .prog-fill { height: 100%; background: #2563eb; border-radius: 99px; transition: width 0.2s ease; width: 0%; }
     .scan-sub { font-size: 11px; color: #9ca3af; margin-top: 5px; }
-
-    /* ── Thumbnail grid ── */
     .thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; }
     .thumb-card { border: 2px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.15s; position: relative; }
-    .thumb-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
+    .thumb-card:hover { border-color: #93c5fd; }
     .thumb-card.selected { border-color: #2563eb; background: #eff6ff; }
     .thumb-img-wrap { aspect-ratio: 4/3; background: #f9fafb; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px; }
     .thumb-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
     .thumb-footer { padding: 6px 8px; background: #fff; border-top: 1px solid #f0f0f0; font-size: 10px; color: #6b7280; line-height: 1.4; }
     .thumb-check { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; background: #2563eb; border-radius: 50%; display: none; align-items: center; justify-content: center; }
     .thumb-card.selected .thumb-check { display: flex; }
-    .no-images { text-align: center; padding: 36px 0; }
-    .no-images strong { display: block; font-size: 14px; color: #374151; margin-bottom: 4px; }
-    .no-images p { font-size: 13px; color: #6b7280; }
     .selection-info { font-size: 13px; color: #374151; margin-top: 14px; line-height: 1.5; }
     .selection-info strong { color: #2563eb; }
-
-    /* ── Logo preview ── */
+    .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+    .divider span { font-size: 11px; color: #9ca3af; white-space: nowrap; }
+    .option-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+    .option-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; text-align: center; }
+    .option-card:hover { border-color: #2563eb; background: #eff6ff; }
+    .option-card-icon { font-size: 22px; margin-bottom: 6px; }
+    .option-card-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 3px; }
+    .option-card-desc { font-size: 11px; color: #6b7280; line-height: 1.4; }
+    .draw-canvas-wrap { position: relative; width: 100%; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: crosshair; }
+    .draw-canvas-wrap canvas { display: block; width: 100%; }
+    .draw-hint { font-size: 12px; color: #6b7280; margin-top: 8px; text-align: center; }
+    .selection-confirm { padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 13px; color: #166534; margin-top: 10px; }
     .logo-card { border: 1px solid #e5e7eb; border-radius: 11px; padding: 14px; }
     .logo-inner { display: flex; align-items: center; gap: 14px; }
     .logo-thumb-box { width: 64px; height: 64px; background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
@@ -107,8 +101,6 @@
     .logo-fsize { font-size: 11px; color: #9ca3af; margin-top: 2px; }
     .change-btn { background: none; border: none; font-size: 12px; font-weight: 500; color: #2563eb; cursor: pointer; padding: 0; margin-top: 5px; display: block; }
     .change-btn:hover { text-decoration: underline; }
-
-    /* ── Summary card ── */
     .summary { background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 11px; padding: 14px; margin-bottom: 18px; }
     .summary-row { display: flex; align-items: flex-start; gap: 12px; }
     .summary-logo { width: 48px; height: 48px; background: #fff; border: 1px solid #e5e7eb; border-radius: 7px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
@@ -116,15 +108,11 @@
     .summary-count { font-size: 11px; color: #9ca3af; font-weight: 500; margin-bottom: 6px; }
     .summary-files { display: flex; flex-direction: column; gap: 3px; }
     .summary-file { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #374151; }
-
-    /* ── Process progress ── */
     .proc-prog { margin-top: 0; }
     .proc-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
     .proc-label { font-size: 13px; color: #374151; }
     .proc-pct { font-size: 13px; font-weight: 600; color: #111; }
     .proc-fname { font-size: 11px; color: #9ca3af; margin-top: 5px; }
-
-    /* ── Success / error banners ── */
     .success { display: flex; align-items: center; gap: 12px; padding: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 11px; margin-bottom: 14px; }
     .success-ico { width: 30px; height: 30px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .success-title { font-size: 13px; font-weight: 500; color: #166534; }
@@ -132,12 +120,10 @@
     .err-banner { padding: 13px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 11px; margin-bottom: 14px; }
     .err-title { font-size: 13px; font-weight: 500; color: #991b1b; }
     .err-detail { font-size: 12px; color: #dc2626; margin-top: 3px; }
-
-    /* ── Footer ── */
     .footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #f0f0f0; padding: 9px 20px; text-align: center; }
     .footer p { font-size: 11px; color: #9ca3af; }
-
     .hidden { display: none !important; }
+    .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 9px; padding: 10px 14px; font-size: 12px; color: #1e40af; margin-bottom: 14px; line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -159,13 +145,10 @@
 <main class="main">
   <div class="steps" id="stepBar"></div>
 
-  <!-- ════════════════════════════════════════
-       STEP 1: Upload PDFs
-  ════════════════════════════════════════ -->
+  <!-- STEP 1: Upload PDFs -->
   <div class="panel show" id="panel1">
     <h2>Upload your PDFs</h2>
     <p class="sub">Up to 3 files · 10MB per file · 30MB total</p>
-
     <div class="dropzone" id="pdfDz">
       <input type="file" id="pdfIn" accept=".pdf" multiple style="display:none">
       <div class="dz-icon">
@@ -176,66 +159,88 @@
       <div class="dz-main">Drag & drop PDFs here, or <span>browse files</span></div>
       <div class="dz-hint">PDF files only</div>
     </div>
-
     <div id="pdfErr" class="err-inline hidden">
       <svg width="13" height="13" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
       <span id="pdfErrTxt"></span>
     </div>
     <div class="file-list" id="pdfList"></div>
-
-    <button class="btn btn-primary mt20" id="btn1" onclick="goStep2()" disabled>
-      Scan for images →
-    </button>
+    <button class="btn btn-primary mt20" id="btn1" onclick="goStep2()" disabled>Continue →</button>
   </div>
 
-  <!-- ════════════════════════════════════════
-       STEP 2: Scan & Select
-  ════════════════════════════════════════ -->
+  <!-- STEP 2: Find Logo -->
   <div class="panel" id="panel2">
-    <h2>Select images to replace</h2>
-    <p class="sub" id="step2sub">Scanning your PDFs for embedded images…</p>
+    <h2 id="s2title">Find the logo</h2>
+    <p class="sub" id="s2sub">Choose how to locate the logo on your PDF.</p>
 
-    <!-- Scanning in progress -->
-    <div id="scanningArea">
+    <!-- Mode selector -->
+    <div id="modeSelector">
+      <div class="option-cards">
+        <div class="option-card" onclick="startScan()">
+          <div class="option-card-icon">🔍</div>
+          <div class="option-card-title">Auto scan</div>
+          <div class="option-card-desc">Detects embedded images automatically</div>
+        </div>
+        <div class="option-card" onclick="startDraw()">
+          <div class="option-card-icon">✏️</div>
+          <div class="option-card-title">Draw selection</div>
+          <div class="option-card-desc">Draw a box around the logo yourself</div>
+        </div>
+      </div>
+      <button class="btn btn-outline mt20" onclick="goStep1()">← Back</button>
+    </div>
+
+    <!-- Scanning progress -->
+    <div id="scanningArea" class="hidden">
       <div class="scan-progress">
         <div class="scan-top">
-          <span class="scan-label" id="scanLabel">Starting scan…</span>
+          <span class="scan-label" id="scanLabel">Scanning…</span>
           <span class="scan-pct" id="scanPct">0%</span>
         </div>
         <div class="prog-bg"><div class="prog-fill" id="scanBar"></div></div>
         <div class="scan-sub" id="scanSub"></div>
       </div>
-      <p style="font-size:13px;color:#6b7280;margin-top:12px;">
-        This may take a moment for large or multi-page files.
-      </p>
     </div>
 
-    <!-- Results after scanning -->
+    <!-- Scan results -->
     <div id="resultsArea" class="hidden">
       <div id="thumbGrid" class="thumb-grid"></div>
-      <div id="noImagesMsg" class="no-images hidden">
-        <strong>No embedded images found</strong>
-        <p>These PDFs use vector logos — common in CAD files. Use AI Detection to find and replace them.</p>
-        <button class="btn btn-primary" onclick="runAIDetection()" style="max-width:260px;margin:16px auto 0;">
-          ✦ Try AI Detection
-        </button>
+      <div id="noImagesMsg" class="hidden" style="text-align:center;padding:24px 0;">
+        <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:6px;">No embedded images found</p>
+        <p style="font-size:13px;color:#6b7280;margin-bottom:16px;">This PDF uses vector or text logos. Use "Draw selection" to mark the logo area manually.</p>
+        <button class="btn btn-outline" onclick="startDraw()" style="max-width:220px;margin:0 auto;">✏️ Draw selection instead</button>
       </div>
       <p class="selection-info" id="selInfo"></p>
       <div class="btn-row">
-        <button class="btn btn-outline" onclick="goStep1()">← Back</button>
+        <button class="btn btn-outline" onclick="backToMode()">← Back</button>
         <button class="btn btn-primary" id="btn2" onclick="goStep3()" disabled>Continue →</button>
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <button class="btn-ghost" onclick="startDraw()">Not what you wanted? Draw manually instead</button>
+      </div>
+    </div>
+
+    <!-- Draw selection -->
+    <div id="drawArea" class="hidden">
+      <div class="info-box">Click and drag on the page below to draw a box around the logo. It will be replaced at the same position on every page.</div>
+      <div class="draw-canvas-wrap" id="canvasWrap">
+        <canvas id="pageCanvas"></canvas>
+      </div>
+      <p class="draw-hint" id="drawHint">Click and drag to select the logo area</p>
+      <div id="selConfirm" class="selection-confirm hidden">
+        ✓ Region selected — <span id="selDims"></span> · Drag again to adjust
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="backToMode()">← Back</button>
+        <button class="btn btn-primary" id="btnDraw" onclick="confirmDraw()" disabled>Use this region →</button>
       </div>
     </div>
   </div>
 
-  <!-- ════════════════════════════════════════
-       STEP 3: Upload Logo + Process
-  ════════════════════════════════════════ -->
+  <!-- STEP 3: Logo + Process -->
   <div class="panel" id="panel3">
     <h2>Upload logo &amp; replace</h2>
-    <p class="sub">Upload your new logo. It replaces only the images you selected.</p>
+    <p class="sub">Upload your new logo. It replaces the selected area on all pages.</p>
 
-    <!-- Summary of what will be replaced -->
     <div class="summary">
       <div class="summary-row">
         <div id="summaryLogoBox" class="summary-logo hidden">
@@ -248,7 +253,6 @@
       </div>
     </div>
 
-    <!-- Logo upload -->
     <div id="logoDzArea">
       <div class="dropzone" id="logoDz">
         <input type="file" id="logoIn" accept=".png,.jpg,.jpeg,image/png,image/jpeg" style="display:none">
@@ -280,13 +284,10 @@
       <span id="logoErrTxt"></span>
     </div>
 
-    <!-- Idle state -->
     <div id="stateIdle" class="mt20">
       <button class="btn btn-primary" id="btn3" onclick="startProcess()" disabled>Replace logos</button>
-      <button class="btn btn-outline mt10" onclick="goBackToResults()">← Back</button>
+      <button class="btn btn-outline mt10" onclick="backToStep2()">← Back</button>
     </div>
-
-    <!-- Processing state -->
     <div id="stateRunning" class="hidden mt20">
       <div class="proc-prog">
         <div class="proc-top">
@@ -297,96 +298,82 @@
         <div class="proc-fname" id="procFname"></div>
       </div>
     </div>
-
-    <!-- Done state -->
     <div id="stateDone" class="hidden mt20">
       <div class="success">
         <div class="success-ico">
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#16a34a" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-          </svg>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#16a34a" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
         <div>
           <div class="success-title" id="successTitle">Processed successfully</div>
-          <div class="success-sub">Logos replaced on all selected pages</div>
+          <div class="success-sub">Logos replaced on all pages</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="doDownload()">
-        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-        </svg>
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
         <span id="dlBtnLabel">Download PDF</span>
       </button>
       <button class="btn btn-outline mt10" onclick="resetAll()">Process more files</button>
     </div>
-
-    <!-- Error state -->
     <div id="stateError" class="hidden mt20">
       <div class="err-banner">
         <div class="err-title">Processing failed</div>
         <div class="err-detail" id="procErrDetail"></div>
       </div>
       <button class="btn btn-primary" onclick="startProcess()">Try again</button>
-      <button class="btn btn-outline mt10" onclick="goBackToResults()">← Back</button>
+      <button class="btn btn-outline mt10" onclick="backToStep2()">← Back</button>
     </div>
   </div>
-
 </main>
 
 <footer class="footer">
   <p>All processing happens in your browser — your files never leave your device</p>
 </footer>
 
-<!-- CDN Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────────────────────
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────
 let pdfFiles       = [];
 let logoFile       = null;
 let logoURL        = null;
-let scanResults    = [];   // { fileIdx, pageNum, bound, id }
-let uniqueImages   = [];   // deduplicated: { id, bound, thumbnail, fileIdx, pageNum }
+let scanResults    = [];
+let uniqueImages   = [];
 let selectedIds    = new Set();
 let processedFiles = [];
 let currentStep    = 1;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STEP INDICATOR
-// ─────────────────────────────────────────────────────────────────────────────
-const STEP_LABELS = ['Upload PDFs', 'Select images', 'Replace & download'];
+// Manual draw state
+let drawMode       = false;
+let manualBounds   = null;   // { x, y, w, h } in PDF points
+let drawCtx        = null;
+let drawPageImage  = null;
+let drawPageDims   = null;   // { w, h, scale }
+let drawStart      = null;
+let drawEnd        = null;
+let isDrawing      = false;
 
+const STEP_LABELS = ['Upload PDFs', 'Find logo', 'Replace & download'];
+
+// ── Step indicator ─────────────────────────────────────────────────────────
 function renderSteps() {
   const bar = document.getElementById('stepBar');
   bar.innerHTML = '';
   STEP_LABELS.forEach((label, i) => {
     const n = i + 1;
-    const done   = currentStep > n;
-    const active = currentStep === n;
-    const cls    = done ? 'done' : active ? 'active' : 'todo';
-
+    const done = currentStep > n, active = currentStep === n;
+    const cls = done ? 'done' : active ? 'active' : 'todo';
     bar.insertAdjacentHTML('beforeend', `
       <div class="step">
         <div class="step-dot ${cls}">
-          ${done
-            ? `<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3">
-                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-               </svg>`
-            : n}
+          ${done ? '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : n}
         </div>
         <div class="step-name ${active ? 'active-lbl' : done ? 'done-lbl' : 'todo-lbl'}">${label}</div>
-      </div>
-    `);
+      </div>`);
     if (i < STEP_LABELS.length - 1) {
       bar.insertAdjacentHTML('beforeend',
         `<div class="step-line ${done ? 'done-line' : 'todo-line'}"></div>`);
@@ -401,32 +388,44 @@ function showPanel(n) {
   renderSteps();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// NAVIGATION
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Navigation ────────────────────────────────────────────────────────────
 function goStep1() { showPanel(1); }
 
 function goStep2() {
+  scanResults = []; uniqueImages = []; selectedIds.clear();
+  drawMode = false; manualBounds = null;
   showPanel(2);
-  document.getElementById('step2sub').textContent =
-    `Scanning ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''} for embedded images…`;
-  document.getElementById('scanningArea').classList.remove('hidden');
+  document.getElementById('modeSelector').classList.remove('hidden');
+  document.getElementById('scanningArea').classList.add('hidden');
   document.getElementById('resultsArea').classList.add('hidden');
-  scanAllPDFs();
+  document.getElementById('drawArea').classList.add('hidden');
+  document.getElementById('s2title').textContent = 'Find the logo';
+  document.getElementById('s2sub').textContent = 'Choose how to locate the logo on your PDF.';
 }
 
-function goBackToResults() {
-  showPanel(2);
+function backToMode() {
+  document.getElementById('modeSelector').classList.remove('hidden');
   document.getElementById('scanningArea').classList.add('hidden');
-  document.getElementById('resultsArea').classList.remove('hidden');
+  document.getElementById('resultsArea').classList.add('hidden');
+  document.getElementById('drawArea').classList.add('hidden');
+}
+
+function backToStep2() {
+  showPanel(2);
+  backToMode();
 }
 
 function goStep3() {
-  // Populate summary
-  const selCount = selectedIds.size;
-  const totalInstances = countTotalInstances();
+  const isManual = drawMode && manualBounds;
+  const selCount = isManual ? 1 : selectedIds.size;
+  const totalInst = isManual
+    ? pdfFiles.length + ' PDF(s) — all pages'
+    : countTotalInstances() + ' instance(s)';
+
   document.getElementById('summaryCount').textContent =
-    `${selCount} image type${selCount > 1 ? 's' : ''} → ${totalInstances} instance${totalInstances !== 1 ? 's' : ''} across ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''}`;
+    isManual
+      ? `Manual selection · applied to all pages · ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''}`
+      : `${selCount} image type${selCount > 1 ? 's' : ''} · ${totalInst}`;
 
   document.getElementById('summaryFiles').innerHTML = pdfFiles.map(f => `
     <div class="summary-file">
@@ -440,110 +439,76 @@ function goStep3() {
   showPanel(3);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STEP 1 — PDF UPLOAD
-// ─────────────────────────────────────────────────────────────────────────────
-(function initPDFZone() {
+// ── Step 1: PDF upload ─────────────────────────────────────────────────────
+(function() {
   const dz = document.getElementById('pdfDz');
-  const input = document.getElementById('pdfIn');
-  dz.addEventListener('click', () => input.click());
-  input.addEventListener('change', e => addPDFs(Array.from(e.target.files)));
+  const inp = document.getElementById('pdfIn');
+  dz.addEventListener('click', () => inp.click());
+  inp.addEventListener('change', e => addPDFs(Array.from(e.target.files)));
   dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
   dz.addEventListener('dragleave', () => dz.classList.remove('over'));
-  dz.addEventListener('drop', e => {
-    e.preventDefault(); dz.classList.remove('over');
-    addPDFs(Array.from(e.dataTransfer.files));
-  });
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); addPDFs(Array.from(e.dataTransfer.files)); });
 })();
 
-function addPDFs(newFiles) {
+function addPDFs(files) {
   setErr('pdfErr', null);
-  const combined = [...pdfFiles, ...newFiles].slice(0, 3);
+  const combined = [...pdfFiles, ...files].slice(0, 3);
   const err = validatePDFs(combined);
   if (err) { setErr('pdfErr', err, 'pdfErrTxt'); return; }
   pdfFiles = combined;
   renderPDFList();
-  document.getElementById('btn1').disabled = pdfFiles.length === 0;
+  document.getElementById('btn1').disabled = !pdfFiles.length;
 }
 
 function validatePDFs(files) {
   if (files.length > 3) return 'Maximum 3 files allowed.';
   for (const f of files) {
-    if (!f.name.toLowerCase().endsWith('.pdf')) return `"${f.name}" is not a PDF file.`;
-    if (f.size > 10 * 1024 * 1024) return `"${f.name}" exceeds the 10MB limit.`;
+    if (!f.name.toLowerCase().endsWith('.pdf')) return `"${f.name}" is not a PDF.`;
+    if (f.size > 10 * 1024 * 1024) return `"${f.name}" exceeds 10MB.`;
   }
-  if (files.reduce((s, f) => s + f.size, 0) > 30 * 1024 * 1024)
-    return 'Total size exceeds 30MB.';
+  if (files.reduce((s, f) => s + f.size, 0) > 30 * 1024 * 1024) return 'Total exceeds 30MB.';
   return null;
 }
 
 function renderPDFList() {
   document.getElementById('pdfList').innerHTML = pdfFiles.map((f, i) => `
     <div class="file-row">
-      <div class="file-ico">
-        <svg width="15" height="15" fill="#f87171" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <div class="file-meta">
-        <div class="file-name">${f.name}</div>
-        <div class="file-size">${fmtSize(f.size)}</div>
-      </div>
-      <button class="remove-btn" onclick="removePDF(${i})">
-        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
+      <div class="file-ico"><svg width="15" height="15" fill="#f87171" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg></div>
+      <div class="file-meta"><div class="file-name">${f.name}</div><div class="file-size">${fmtSize(f.size)}</div></div>
+      <button class="remove-btn" onclick="removePDF(${i})"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>`).join('');
 }
 
 function removePDF(i) {
   pdfFiles = pdfFiles.filter((_, idx) => idx !== i);
   renderPDFList();
-  document.getElementById('btn1').disabled = pdfFiles.length === 0;
-  setErr('pdfErr', null);
+  document.getElementById('btn1').disabled = !pdfFiles.length;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STEP 2 — SCAN & SELECT
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Matrix helpers
+// ── Step 2A: Auto scan ────────────────────────────────────────────────────
 function mulMat(m1, m2) {
-  const [a1,b1,c1,d1,e1,f1] = m1;
-  const [a2,b2,c2,d2,e2,f2] = m2;
-  return [
-    a1*a2 + b1*c2, a1*b2 + b1*d2,
-    c1*a2 + d1*c2, c1*b2 + d1*d2,
-    e1*a2 + f1*c2 + e2, e1*b2 + f1*d2 + f2
-  ];
+  const [a1,b1,c1,d1,e1,f1] = m1, [a2,b2,c2,d2,e2,f2] = m2;
+  return [a1*a2+b1*c2, a1*b2+b1*d2, c1*a2+d1*c2, c1*b2+d1*d2, e1*a2+f1*c2+e2, e1*b2+f1*d2+f2];
 }
 
 function matBBox(m) {
   const [a,b,c,d,e,f] = m;
-  const xs = [e, e+a, e+a+c, e+c];
-  const ys = [f, f+b, f+b+d, f+d];
+  const xs = [e, e+a, e+a+c, e+c], ys = [f, f+b, f+b+d, f+d];
   const x = Math.min(...xs), y = Math.min(...ys);
   return { x, y, w: Math.max(...xs)-x, h: Math.max(...ys)-y };
 }
 
-async function getBoundsOnPage(pdf, pageNum) {
-  const page = await pdf.getPage(pageNum);
-  const ops  = await page.getOperatorList();
-  const OPS  = pdfjsLib.OPS;
-  const stack = [];
-  let mat = [1,0,0,1,0,0];
-  const bounds = [];
-
+async function getBoundsOnPage(pdf, pn) {
+  const page = await pdf.getPage(pn);
+  const ops = await page.getOperatorList();
+  const OPS = pdfjsLib.OPS;
+  const stack = []; let mat = [1,0,0,1,0,0]; const bounds = [];
   for (let i = 0; i < ops.fnArray.length; i++) {
-    const fn   = ops.fnArray[i];
-    const args = ops.argsArray[i];
-    if      (fn === OPS.save)    { stack.push([...mat]); }
-    else if (fn === OPS.restore) { if (stack.length) mat = stack.pop(); }
-    else if (fn === OPS.transform) { mat = mulMat(args, mat); }
-    else if (fn === OPS.paintImageXObject ||
-             fn === OPS.paintInlineImageXObject ||
-             fn === OPS.paintImageMaskXObject) {
+    const fn = ops.fnArray[i], args = ops.argsArray[i];
+    if (fn===OPS.save) stack.push([...mat]);
+    else if (fn===OPS.restore) { if (stack.length) mat = stack.pop(); }
+    else if (fn===OPS.transform) mat = mulMat(args, mat);
+    else if (fn===OPS.paintImageXObject || fn===OPS.paintInlineImageXObject || fn===OPS.paintImageMaskXObject) {
       const bb = matBBox(mat);
       if (bb.w > 5 && bb.h > 5) bounds.push(bb);
     }
@@ -553,27 +518,17 @@ async function getBoundsOnPage(pdf, pageNum) {
 
 async function renderThumbnail(page, bound) {
   const vpBase = page.getViewport({ scale: 1 });
-  const pageH  = vpBase.height;
-  const pageW  = vpBase.width;
-  const MAX_PX = 1800;
-  const SCALE  = Math.min(2, MAX_PX / Math.max(pageW, pageH));
+  const pageH = vpBase.height, pageW = vpBase.width;
+  const SCALE = Math.min(2, 1800 / Math.max(pageW, pageH));
   const vp = page.getViewport({ scale: SCALE });
   const canvas = document.createElement('canvas');
-  canvas.width  = Math.round(vp.width);
-  canvas.height = Math.round(vp.height);
+  canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
   await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-
-  // PDF user space (origin bottom-left, y-up) to canvas pixels (origin top-left, y-down)
-  const cx = Math.round(bound.x * SCALE);
-  const cy = Math.round((pageH - bound.y - bound.h) * SCALE);
-  const cw = Math.round(bound.w * SCALE);
-  const ch = Math.round(bound.h * SCALE);
-  const sx = Math.max(0, cx);
-  const sy = Math.max(0, cy);
-  const sw = Math.min(cw, canvas.width  - sx);
-  const sh = Math.min(ch, canvas.height - sy);
-  if (sw <= 0 || sh <= 0) return null;
-
+  const cx = Math.round(bound.x * SCALE), cy = Math.round((pageH - bound.y - bound.h) * SCALE);
+  const cw = Math.round(bound.w * SCALE), ch = Math.round(bound.h * SCALE);
+  const sx = Math.max(0,cx), sy = Math.max(0,cy);
+  const sw = Math.min(cw, canvas.width-sx), sh = Math.min(ch, canvas.height-sy);
+  if (sw<=0||sh<=0) return null;
   const out = document.createElement('canvas');
   out.width = sw; out.height = sh;
   out.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
@@ -581,73 +536,50 @@ async function renderThumbnail(page, bound) {
 }
 
 function sameSize(b1, b2) {
-  const dw = Math.abs(b1.w - b2.w) / Math.max(b1.w, b2.w, 1);
-  const dh = Math.abs(b1.h - b2.h) / Math.max(b1.h, b2.h, 1);
-  return dw < 0.12 && dh < 0.12;
+  return Math.abs(b1.w-b2.w)/Math.max(b1.w,b2.w,1)<0.12 && Math.abs(b1.h-b2.h)/Math.max(b1.h,b2.h,1)<0.12;
 }
 
-async function scanAllPDFs() {
-  scanResults  = [];
-  uniqueImages = [];
-  selectedIds.clear();
+async function startScan() {
+  drawMode = false;
+  document.getElementById('modeSelector').classList.add('hidden');
+  document.getElementById('scanningArea').classList.remove('hidden');
   let idCounter = 0;
-
-  // Count total pages for progress
   const pageCounts = [];
-  for (const file of pdfFiles) {
-    const buf = await file.arrayBuffer();
+  for (const f of pdfFiles) {
+    const buf = await f.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
     pageCounts.push(pdf.numPages);
   }
-  const totalPages = pageCounts.reduce((a, b) => a + b, 0);
+  const totalPages = pageCounts.reduce((a,b)=>a+b,0);
   let scanned = 0;
-
   for (let fi = 0; fi < pdfFiles.length; fi++) {
-    const file = pdfFiles[fi];
-    const buf  = await file.arrayBuffer();
-    const pdf  = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-
-
+    const buf = await pdfFiles[fi].arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
     for (let pn = 1; pn <= pdf.numPages; pn++) {
-      // Update scanning UI
-      const pct = Math.round((scanned / totalPages) * 100);
-      document.getElementById('scanBar').style.width = pct + '%';
-      document.getElementById('scanPct').textContent = pct + '%';
-      document.getElementById('scanLabel').textContent =
-        `Scanning page ${pn} of ${pdf.numPages}`;
-      document.getElementById('scanSub').textContent =
-        `File ${fi+1} of ${pdfFiles.length}: ${file.name}`;
-
-      // Yield to browser so UI updates
-      await new Promise(r => setTimeout(r, 0));
-
+      const pct = Math.round(scanned/totalPages*100);
+      document.getElementById('scanBar').style.width = pct+'%';
+      document.getElementById('scanPct').textContent = pct+'%';
+      document.getElementById('scanLabel').textContent = `Scanning page ${pn} of ${pdf.numPages}`;
+      document.getElementById('scanSub').textContent = `File ${fi+1} of ${pdfFiles.length}: ${pdfFiles[fi].name}`;
+      await new Promise(r=>setTimeout(r,0));
       const { page, bounds } = await getBoundsOnPage(pdf, pn);
-
       for (const bound of bounds) {
-        // Render thumbnail only from page 1 (or first occurrence)
         let thumbnail = null;
-        const isFirstOccurrence = !uniqueImages.some(u => sameSize(u.bound, bound));
-        if (pn === 1 || isFirstOccurrence) {
-          try { thumbnail = await renderThumbnail(page, bound); } catch(e) {}
+        if (!uniqueImages.some(u=>sameSize(u.bound, bound))) {
+          try { thumbnail = await renderThumbnail(page, bound); } catch(e){}
         }
-
         const id = idCounter++;
         scanResults.push({ fileIdx: fi, pageNum: pn, bound, id });
-
-        // Deduplicate by size
-        if (!uniqueImages.some(u => sameSize(u.bound, bound))) {
+        if (!uniqueImages.some(u=>sameSize(u.bound, bound))) {
           uniqueImages.push({ id, bound, thumbnail, fileIdx: fi, pageNum: pn });
         }
       }
       scanned++;
     }
   }
-
-  // Wrap up
   document.getElementById('scanBar').style.width = '100%';
   document.getElementById('scanPct').textContent = '100%';
-
-  await new Promise(r => setTimeout(r, 300));
+  await new Promise(r=>setTimeout(r,300));
   document.getElementById('scanningArea').classList.add('hidden');
   document.getElementById('resultsArea').classList.remove('hidden');
   renderThumbnailGrid();
@@ -656,105 +588,179 @@ async function scanAllPDFs() {
 function renderThumbnailGrid() {
   const grid = document.getElementById('thumbGrid');
   const none = document.getElementById('noImagesMsg');
-
-  if (uniqueImages.length === 0) {
-    grid.classList.add('hidden');
-    none.classList.remove('hidden');
+  if (!uniqueImages.length) {
+    grid.classList.add('hidden'); none.classList.remove('hidden');
     document.getElementById('selInfo').textContent = '';
     document.getElementById('btn2').disabled = true;
     return;
   }
-
-  none.classList.add('hidden');
-  grid.classList.remove('hidden');
-
+  none.classList.add('hidden'); grid.classList.remove('hidden');
   grid.innerHTML = uniqueImages.map((img, i) => {
-    const instances = scanResults.filter(r => sameSize(r.bound, img.bound)).length;
-    return `
-      <div class="thumb-card" id="tc_${img.id}" onclick="toggleSelect(${img.id})">
-        <div class="thumb-img-wrap">
-          ${img.thumbnail
-            ? `<img src="${img.thumbnail}" alt="image ${i+1}">`
-            : `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.5">
-                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
-               </svg>`}
-        </div>
-        <div class="thumb-footer">
-          ${Math.round(img.bound.w)} × ${Math.round(img.bound.h)} pt<br>
-          Found on ${instances} page${instances !== 1 ? 's' : ''}
-        </div>
-        <div class="thumb-check">
-          <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-          </svg>
-        </div>
-      </div>`;
+    const instances = scanResults.filter(r=>sameSize(r.bound, img.bound)).length;
+    return `<div class="thumb-card" id="tc_${img.id}" onclick="toggleSelect(${img.id})">
+      <div class="thumb-img-wrap">
+        ${img.thumbnail ? `<img src="${img.thumbnail}" alt="image ${i+1}">` :
+          `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>`}
+      </div>
+      <div class="thumb-footer">${Math.round(img.bound.w)}x${Math.round(img.bound.h)} pt · ${instances} page${instances!==1?'s':''}</div>
+      <div class="thumb-check"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+    </div>`;
   }).join('');
-
-  updateSelectionInfo();
+  updateSelInfo();
 }
 
 function toggleSelect(id) {
-  if (selectedIds.has(id)) {
-    selectedIds.delete(id);
-    document.getElementById(`tc_${id}`)?.classList.remove('selected');
-  } else {
-    selectedIds.add(id);
-    document.getElementById(`tc_${id}`)?.classList.add('selected');
-  }
-  updateSelectionInfo();
+  selectedIds.has(id) ? selectedIds.delete(id) : selectedIds.add(id);
+  document.getElementById(`tc_${id}`)?.classList.toggle('selected', selectedIds.has(id));
+  updateSelInfo();
 }
 
 function countTotalInstances() {
-  return [...selectedIds].reduce((sum, id) => {
-    const img = uniqueImages.find(u => u.id === id);
-    if (!img) return sum;
-    return sum + scanResults.filter(r => sameSize(r.bound, img.bound)).length;
+  return [...selectedIds].reduce((sum,id)=>{
+    const img = uniqueImages.find(u=>u.id===id);
+    return sum + (img ? scanResults.filter(r=>sameSize(r.bound,img.bound)).length : 0);
   }, 0);
 }
 
-function updateSelectionInfo() {
+function updateSelInfo() {
   const n = selectedIds.size;
-  const infoEl = document.getElementById('selInfo');
-  if (n === 0) {
-    infoEl.innerHTML = 'Tap an image above to select it for replacement.';
-  } else {
-    const total = countTotalInstances();
-    infoEl.innerHTML =
-      `<strong>${n}</strong> image type${n > 1 ? 's' : ''} selected — will replace <strong>${total}</strong> instance${total !== 1 ? 's' : ''} across all pages`;
-  }
-  document.getElementById('btn2').disabled = n === 0;
+  document.getElementById('selInfo').innerHTML = n===0
+    ? 'Tap an image above to select it for replacement.'
+    : `<strong>${n}</strong> type${n>1?'s':''} selected — <strong>${countTotalInstances()}</strong> instance${countTotalInstances()!==1?'s':''} will be replaced`;
+  document.getElementById('btn2').disabled = n===0;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STEP 3 — LOGO UPLOAD + PROCESS
-// ─────────────────────────────────────────────────────────────────────────────
-(function initLogoZone() {
-  const dz    = document.getElementById('logoDz');
-  const input = document.getElementById('logoIn');
-  dz.addEventListener('click', () => input.click());
-  input.addEventListener('change', e => handleLogo(e.target.files[0]));
+// ── Step 2B: Draw selection ───────────────────────────────────────────────
+async function startDraw() {
+  drawMode = true;
+  manualBounds = null;
+  document.getElementById('modeSelector').classList.add('hidden');
+  document.getElementById('resultsArea').classList.add('hidden');
+  document.getElementById('scanningArea').classList.add('hidden');
+  document.getElementById('drawArea').classList.remove('hidden');
+  document.getElementById('btnDraw').disabled = true;
+  document.getElementById('selConfirm').classList.add('hidden');
+  document.getElementById('drawHint').textContent = 'Loading page preview…';
+
+  const file = pdfFiles[0];
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+  const page = await pdf.getPage(1);
+  const vpBase = page.getViewport({ scale: 1 });
+  const maxW = document.getElementById('canvasWrap').offsetWidth || 520;
+  const scale = Math.min(1, maxW / vpBase.width);
+  drawPageDims = { w: vpBase.width, h: vpBase.height, scale };
+
+  const canvas = document.getElementById('pageCanvas');
+  const vp = page.getViewport({ scale });
+  canvas.width = Math.round(vp.width);
+  canvas.height = Math.round(vp.height);
+  drawCtx = canvas.getContext('2d');
+  await page.render({ canvasContext: drawCtx, viewport: vp }).promise;
+  drawPageImage = drawCtx.getImageData(0, 0, canvas.width, canvas.height);
+
+  document.getElementById('drawHint').textContent = 'Click and drag to draw a box around the logo';
+
+  // Mouse events
+  canvas.onmousedown = e => {
+    isDrawing = true;
+    drawStart = getCanvasPos(canvas, e);
+    drawEnd = { ...drawStart };
+  };
+  canvas.onmousemove = e => {
+    if (!isDrawing) return;
+    drawEnd = getCanvasPos(canvas, e);
+    redrawSelection();
+  };
+  canvas.onmouseup = e => {
+    if (!isDrawing) return;
+    isDrawing = false;
+    drawEnd = getCanvasPos(canvas, e);
+    redrawSelection();
+    finalizeDrawSelection();
+  };
+  // Touch
+  canvas.ontouchstart = e => { e.preventDefault(); canvas.onmousedown(e.touches[0]); };
+  canvas.ontouchmove  = e => { e.preventDefault(); canvas.onmousemove(e.touches[0]); };
+  canvas.ontouchend   = e => { e.preventDefault(); canvas.onmouseup(e.changedTouches[0]); };
+}
+
+function getCanvasPos(canvas, e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left) * (canvas.width / rect.width),
+    y: (e.clientY - rect.top)  * (canvas.height / rect.height)
+  };
+}
+
+function redrawSelection() {
+  if (!drawPageImage || !drawStart || !drawEnd) return;
+  drawCtx.putImageData(drawPageImage, 0, 0);
+  const x = Math.min(drawStart.x, drawEnd.x);
+  const y = Math.min(drawStart.y, drawEnd.y);
+  const w = Math.abs(drawEnd.x - drawStart.x);
+  const h = Math.abs(drawEnd.y - drawStart.y);
+  drawCtx.fillStyle = 'rgba(37,99,235,0.15)';
+  drawCtx.fillRect(x, y, w, h);
+  drawCtx.strokeStyle = '#2563eb';
+  drawCtx.lineWidth = 2;
+  drawCtx.strokeRect(x, y, w, h);
+  drawCtx.fillStyle = '#2563eb';
+  [[x,y],[x+w,y],[x,y+h],[x+w,y+h]].forEach(([cx,cy])=>drawCtx.fillRect(cx-4,cy-4,8,8));
+}
+
+function finalizeDrawSelection() {
+  if (!drawStart || !drawEnd) return;
+  const { w: pageW, h: pageH, scale } = drawPageDims;
+  const x1 = Math.min(drawStart.x, drawEnd.x);
+  const y1 = Math.min(drawStart.y, drawEnd.y);
+  const x2 = Math.max(drawStart.x, drawEnd.x);
+  const y2 = Math.max(drawStart.y, drawEnd.y);
+  const pw = x2 - x1, ph = y2 - y1;
+  if (pw < 8 || ph < 8) {
+    document.getElementById('drawHint').textContent = 'Too small — drag a bigger area and try again';
+    return;
+  }
+  // Convert canvas pixels → PDF user space
+  manualBounds = {
+    x: x1 / scale,
+    y: pageH - y2 / scale,   // flip y: PDF origin is bottom-left
+    w: pw / scale,
+    h: ph / scale
+  };
+  document.getElementById('selDims').textContent =
+    `${Math.round(manualBounds.w)} × ${Math.round(manualBounds.h)} pt`;
+  document.getElementById('selConfirm').classList.remove('hidden');
+  document.getElementById('btnDraw').disabled = false;
+  document.getElementById('drawHint').textContent = 'Drag again to adjust';
+}
+
+function confirmDraw() {
+  if (!manualBounds) return;
+  goStep3();
+}
+
+// ── Step 3: Logo upload ───────────────────────────────────────────────────
+(function() {
+  const dz = document.getElementById('logoDz');
+  const inp = document.getElementById('logoIn');
+  dz.addEventListener('click', () => inp.click());
+  inp.addEventListener('change', e => handleLogo(e.target.files[0]));
   dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
   dz.addEventListener('dragleave', () => dz.classList.remove('over'));
-  dz.addEventListener('drop', e => {
-    e.preventDefault(); dz.classList.remove('over');
-    handleLogo(e.dataTransfer.files[0]);
-  });
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); handleLogo(e.dataTransfer.files[0]); });
 })();
 
 function handleLogo(file) {
   if (!file) return;
   setErr('logoErr', null);
   if (!['image/png','image/jpeg'].includes(file.type)) {
-    setErr('logoErr', 'Logo must be a PNG or JPG file.', 'logoErrTxt');
-    return;
+    setErr('logoErr', 'Logo must be PNG or JPG.', 'logoErrTxt'); return;
   }
   if (logoURL) URL.revokeObjectURL(logoURL);
-  logoFile = file;
-  logoURL  = URL.createObjectURL(file);
-
-  document.getElementById('logoPreviewImg').src  = logoURL;
-  document.getElementById('summaryLogoImg').src  = logoURL;
+  logoFile = file; logoURL = URL.createObjectURL(file);
+  document.getElementById('logoPreviewImg').src = logoURL;
+  document.getElementById('summaryLogoImg').src = logoURL;
   document.getElementById('logoFname').textContent = file.name;
   document.getElementById('logoFsize').textContent = fmtSize(file.size);
   document.getElementById('logoDzArea').classList.add('hidden');
@@ -776,280 +782,125 @@ function clearLogo() {
 function setProcState(s) {
   ['Idle','Running','Done','Error'].forEach(x =>
     document.getElementById('state'+x).classList.add('hidden'));
-  document.getElementById('state' + s.charAt(0).toUpperCase() + s.slice(1))
-    .classList.remove('hidden');
+  document.getElementById('state'+s.charAt(0).toUpperCase()+s.slice(1)).classList.remove('hidden');
 }
 
-function updateProcProgress(fileIdx, pct) {
-  const overall = Math.round(((fileIdx + pct/100) / pdfFiles.length) * 100);
-  document.getElementById('procBar').style.width  = overall + '%';
-  document.getElementById('procPct').textContent  = overall + '%';
-  document.getElementById('procLabel').textContent =
-    `Processing file ${fileIdx+1} of ${pdfFiles.length}…`;
-  document.getElementById('procFname').textContent = pdfFiles[fileIdx]?.name || '';
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PDF PROCESSING
-// ─────────────────────────────────────────────────────────────────────────────
+// ── PDF processing ─────────────────────────────────────────────────────────
 async function processSingleFile(file, fileIdx, logoBuf, logoMime) {
-  if (typeof PDFLib === 'undefined') {
-    throw new Error('PDF library failed to load. Check your internet connection and refresh the page.');
-  }
+  if (typeof PDFLib === 'undefined') throw new Error('PDF library not loaded. Refresh and try again.');
   const { PDFDocument, rgb } = PDFLib;
-  updateProcProgress(fileIdx, 5);
 
+  const updateProg = (pct) => {
+    const overall = Math.round(((fileIdx + pct/100) / pdfFiles.length) * 100);
+    document.getElementById('procBar').style.width = overall+'%';
+    document.getElementById('procPct').textContent = overall+'%';
+    document.getElementById('procLabel').textContent = `Processing file ${fileIdx+1} of ${pdfFiles.length}…`;
+    document.getElementById('procFname').textContent = file.name;
+  };
+
+  updateProg(5);
   const pdfBuf = await file.arrayBuffer();
-
-  // Which bounds did the user select?
-  const selectedBounds = [...selectedIds]
-    .map(id => uniqueImages.find(u => u.id === id)?.bound)
-    .filter(Boolean);
-
-  updateProcProgress(fileIdx, 15);
   const doc = await PDFDocument.load(pdfBuf);
-
-  // Embed logo once
   let logoImg;
-  if (logoMime === 'image/png') {
-    logoImg = await doc.embedPng(logoBuf.slice(0));
-  } else {
-    logoImg = await doc.embedJpg(logoBuf.slice(0));
-  }
+  if (logoMime==='image/png') logoImg = await doc.embedPng(logoBuf.slice(0));
+  else logoImg = await doc.embedJpg(logoBuf.slice(0));
+  updateProg(25);
 
-  updateProcProgress(fileIdx, 30);
-
-  // For each page, find matching images and replace
   const pages = doc.getPages();
-  const fileScan = scanResults.filter(r => r.fileIdx === fileIdx);
 
   for (let i = 0; i < pages.length; i++) {
-    const page    = pages[i];
+    const page = pages[i];
     const pageNum = i + 1;
+    let boundsToReplace = [];
 
-    const toReplace = fileScan
-      .filter(r => r.pageNum === pageNum)
-      .filter(r => selectedBounds.some(sel => sameSize(sel, r.bound)));
-
-    for (const r of toReplace) {
-      const b = r.bound;
-      // Cover the original image with white
-      page.drawRectangle({ x: b.x, y: b.y, width: b.w, height: b.h, color: rgb(1,1,1), borderWidth: 0 });
-      // Draw new logo at EXACTLY the same position and size as the original image
-      page.drawImage(logoImg, { x: b.x, y: b.y, width: b.w, height: b.h });
+    if (drawMode && manualBounds) {
+      // Manual selection: apply to every page
+      boundsToReplace = [manualBounds];
+    } else {
+      // Scan-based: only apply to detected positions
+      const selectedBounds = [...selectedIds]
+        .map(id => uniqueImages.find(u=>u.id===id)?.bound).filter(Boolean);
+      boundsToReplace = scanResults
+        .filter(r => r.fileIdx===fileIdx && r.pageNum===pageNum)
+        .filter(r => selectedBounds.some(sel=>sameSize(sel, r.bound)))
+        .map(r => r.bound);
     }
 
-    updateProcProgress(fileIdx, 30 + ((i+1)/pages.length) * 65);
+    for (const b of boundsToReplace) {
+      page.drawRectangle({ x:b.x, y:b.y, width:b.w, height:b.h, color:rgb(1,1,1), borderWidth:0 });
+      page.drawImage(logoImg, { x:b.x, y:b.y, width:b.w, height:b.h });
+    }
+
+    updateProg(25 + ((i+1)/pages.length)*70);
   }
 
-  const bytes = await doc.save();
-  updateProcProgress(fileIdx, 100);
-  return bytes;
+  return await doc.save();
 }
 
 async function startProcess() {
-  if (!logoFile || selectedIds.size === 0) return;
+  if (!logoFile) return;
   setProcState('running');
   processedFiles = [];
-
   try {
     const logoBuf = await logoFile.arrayBuffer();
     for (let i = 0; i < pdfFiles.length; i++) {
       const bytes = await processSingleFile(pdfFiles[i], i, logoBuf, logoFile.type);
-      const name  = pdfFiles[i].name.replace(/\.pdf$/i, '') + '_new-logo.pdf';
-      processedFiles.push({ name, bytes });
+      processedFiles.push({ name: pdfFiles[i].name.replace(/\.pdf$/i,'')+'_new-logo.pdf', bytes });
     }
-
     document.getElementById('successTitle').textContent =
-      `${pdfFiles.length} file${pdfFiles.length > 1 ? 's' : ''} processed successfully`;
+      `${pdfFiles.length} file${pdfFiles.length>1?'s':''} processed`;
     document.getElementById('dlBtnLabel').textContent =
-      pdfFiles.length > 1 ? 'Download ZIP' : 'Download PDF';
+      pdfFiles.length>1 ? 'Download ZIP' : 'Download PDF';
     setProcState('done');
-
   } catch(err) {
-    console.error(err);
     document.getElementById('procErrDetail').textContent = err.message || 'Unknown error.';
     setProcState('error');
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DOWNLOAD
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Download ───────────────────────────────────────────────────────────────
 async function doDownload() {
-  if (processedFiles.length === 1) {
-    triggerDL(new Blob([processedFiles[0].bytes], { type:'application/pdf' }), processedFiles[0].name);
+  if (processedFiles.length===1) {
+    triggerDL(new Blob([processedFiles[0].bytes],{type:'application/pdf'}), processedFiles[0].name);
   } else {
     const zip = new JSZip();
-    processedFiles.forEach(f => zip.file(f.name, f.bytes));
-    const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE' });
-    triggerDL(blob, 'processed_pdfs.zip');
+    processedFiles.forEach(f=>zip.file(f.name,f.bytes));
+    const blob = await zip.generateAsync({type:'blob',compression:'DEFLATE'});
+    triggerDL(blob,'processed_pdfs.zip');
   }
 }
 
 function triggerDL(blob, filename) {
   const url = URL.createObjectURL(blob);
-  const a   = Object.assign(document.createElement('a'), { href: url, download: filename });
+  const a = Object.assign(document.createElement('a'),{href:url,download:filename});
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// RESET + UTILS
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Reset & utils ──────────────────────────────────────────────────────────
 function resetAll() {
-  pdfFiles = []; if (logoURL) URL.revokeObjectURL(logoURL);
-  logoFile = null; logoURL = null;
-  scanResults = []; uniqueImages = []; selectedIds.clear(); processedFiles = [];
-  document.getElementById('pdfList').innerHTML = '';
-  document.getElementById('btn1').disabled = true;
-  document.getElementById('pdfIn').value = '';
+  pdfFiles=[]; if(logoURL)URL.revokeObjectURL(logoURL);
+  logoFile=null; logoURL=null; scanResults=[]; uniqueImages=[];
+  selectedIds.clear(); processedFiles=[];
+  drawMode=false; manualBounds=null; drawPageImage=null;
+  document.getElementById('pdfList').innerHTML='';
+  document.getElementById('btn1').disabled=true;
+  document.getElementById('pdfIn').value='';
   clearLogo();
   showPanel(1);
 }
 
-function setErr(containerId, msg, textId) {
-  const el = document.getElementById(containerId);
-  el.classList.toggle('hidden', !msg);
-  if (msg && textId) document.getElementById(textId).textContent = msg;
+function setErr(id, msg, txtId) {
+  document.getElementById(id).classList.toggle('hidden',!msg);
+  if (msg && txtId) document.getElementById(txtId).textContent = msg;
 }
 
-function fmtSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
-  return (bytes/(1024*1024)).toFixed(1) + ' MB';
+function fmtSize(b) {
+  if(b<1024) return b+' B';
+  if(b<1048576) return (b/1024).toFixed(1)+' KB';
+  return (b/1048576).toFixed(1)+' MB';
 }
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// AI LOGO DETECTION (Gemini Vision via Vercel backend)
-// ─────────────────────────────────────────────────────────────────────────────
-const BACKEND_URL = 'https://ai-backend-hazel-ten.vercel.app';
-
-async function runAIDetection() {
-  // Reset any previous scan results
-  scanResults  = [];
-  uniqueImages = [];
-  selectedIds.clear();
-  let idCounter = 0;
-
-  // Show scanning UI
-  document.getElementById('noImagesMsg').classList.add('hidden');
-  document.getElementById('scanningArea').classList.remove('hidden');
-  document.getElementById('resultsArea').classList.add('hidden');
-  document.getElementById('step2sub').textContent = 'AI is scanning your PDFs for logos…';
-
-  let totalPages = 0;
-  const pageCounts = [];
-  for (const file of pdfFiles) {
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-    pageCounts.push(pdf.numPages);
-    totalPages += pdf.numPages;
-  }
-
-  let scanned = 0;
-
-  for (let fi = 0; fi < pdfFiles.length; fi++) {
-    const file = pdfFiles[fi];
-    const buf  = await file.arrayBuffer();
-    const pdf  = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-
-    for (let pn = 1; pn <= pdf.numPages; pn++) {
-      const pct = Math.round((scanned / totalPages) * 100);
-      document.getElementById('scanBar').style.width = pct + '%';
-      document.getElementById('scanPct').textContent = pct + '%';
-      document.getElementById('scanLabel').textContent = `AI scanning page ${pn} of ${pdf.numPages}`;
-      document.getElementById('scanSub').textContent   = `File ${fi+1} of ${pdfFiles.length}: ${file.name}`;
-
-      await new Promise(r => setTimeout(r, 0));
-
-      const page   = await pdf.getPage(pn);
-      const vpBase = page.getViewport({ scale: 1 });
-      const pageW  = vpBase.width;
-      const pageH  = vpBase.height;
-
-      // Render page to canvas for Gemini
-      const MAX_PX = 1024;
-      const scale  = Math.min(1.5, MAX_PX / Math.max(pageW, pageH));
-      const vp     = page.getViewport({ scale });
-      const canvas = document.createElement('canvas');
-      canvas.width  = Math.round(vp.width);
-      canvas.height = Math.round(vp.height);
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-
-      // Convert to JPEG base64 (smaller payload)
-      const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
-
-      try {
-        const resp = await fetch(`${BACKEND_URL}/api/detect-logo`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            imageBase64: base64,
-            mimeType: 'image/jpeg',
-            imageWidth:  canvas.width,
-            imageHeight: canvas.height,
-            pageWidth:   pageW,
-            pageHeight:  pageH
-          })
-        });
-
-        const { bounds, error } = await resp.json();
-
-        if (error) {
-          console.error('AI detection error:', error);
-        } else if (bounds && bounds.length > 0) {
-          for (const b of bounds) {
-            // Crop thumbnail from rendered canvas
-            const sx = Math.round(b.imgLeft   * canvas.width);
-            const sy = Math.round(b.imgTop    * canvas.height);
-            const sw = Math.round((b.imgRight  - b.imgLeft)   * canvas.width);
-            const sh = Math.round((b.imgBottom - b.imgTop)    * canvas.height);
-            let thumbnail = null;
-            if (sw > 0 && sh > 0) {
-              const tc = document.createElement('canvas');
-              tc.width = sw; tc.height = sh;
-              tc.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
-              thumbnail = tc.toDataURL('image/png');
-            }
-
-            const bound = { x: b.x, y: b.y, w: b.w, h: b.h };
-            const id    = idCounter++;
-            scanResults.push({ fileIdx: fi, pageNum: pn, bound, id });
-
-            if (!uniqueImages.some(u => sameSize(u.bound, bound))) {
-              uniqueImages.push({ id, bound, thumbnail, fileIdx: fi, pageNum: pn });
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Backend call failed:', err);
-      }
-
-      scanned++;
-    }
-  }
-
-  document.getElementById('scanBar').style.width = '100%';
-  document.getElementById('scanPct').textContent = '100%';
-
-  await new Promise(r => setTimeout(r, 300));
-  document.getElementById('scanningArea').classList.add('hidden');
-  document.getElementById('resultsArea').classList.remove('hidden');
-
-  if (uniqueImages.length === 0) {
-    document.getElementById('thumbGrid').classList.add('hidden');
-    document.getElementById('noImagesMsg').classList.remove('hidden');
-    document.getElementById('noImagesMsg').querySelector('p').textContent =
-      'AI could not detect any logos on these pages. The logos may be too small or blended into the background.';
-    document.getElementById('noImagesMsg').querySelector('button')?.remove();
-  } else {
-    renderThumbnailGrid();
-  }
-}
-
-// ── Boot
 renderSteps();
 </script>
 </body>
