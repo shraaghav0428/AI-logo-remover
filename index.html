@@ -233,6 +233,14 @@
 
     <!-- Draw / Erase -->
     <div id="drawArea" class="hidden">
+      <!-- Per-file progress header -->
+      <div id="drawFileHeader" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:10px 12px;background:#f9fafb;border:1px solid #f0f0f0;border-radius:9px;">
+        <div style="min-width:0;">
+          <div style="font-size:11px;color:#6b7280;" id="drawFileCount">PDF 1 of 1</div>
+          <div style="font-size:13px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px;" id="drawFileName"></div>
+        </div>
+        <div id="drawFileDots" style="display:flex;gap:5px;align-items:center;flex-shrink:0;margin-left:10px;"></div>
+      </div>
       <div id="pageCountNote" class="page-count-note"></div>
       <div id="eraseNoteBanner" class="erase-note hidden">
         🗑️ <span>Erase mode — the selected area will be removed. No logo needed.</span>
@@ -368,12 +376,13 @@ let uniqueImages   = [];
 let selectedIds    = new Set();
 let processedFiles = [];
 let currentStep    = 1;
-let drawMode       = false;   // true when user drew a selection manually
-let eraseMode      = false;   // true = wipe out, false = replace with logo
-let manualBoundsArray = [];   // [{ x, y, w, h }] — multiple regions
+let drawMode            = false;
+let eraseMode           = false;
+let currentDrawFileIdx  = 0;
+let manualBoundsPerFile = [];  // [fileIdx] = [{x,y,w,h}, ...]
 let drawCtx        = null;
 let drawPageImage  = null;
-let drawPageDims   = null;    // { w, h, scale }
+let drawPageDims   = null;
 let drawStart      = null;
 let drawEnd        = null;
 let isDrawing      = false;
@@ -446,8 +455,11 @@ function goStep3() {
   const summaryEl = document.getElementById('s3summary');
   summaryEl.className = 'summary' + (isErase ? ' erase-summary' : '');
 
+  const totalAreas = manualBoundsPerFile.reduce((s,a)=>s+a.length,0);
   const modeLabel = isManual
-    ? (isErase ? 'Erase mode — manual selection' : 'Replace mode — manual selection')
+    ? (isErase
+        ? `Erase mode — ${totalAreas} area${totalAreas!==1?'s':''} across ${pdfFiles.length} PDF${pdfFiles.length>1?'s':''}`
+        : `Replace mode — ${totalAreas} area${totalAreas!==1?'s':''} across ${pdfFiles.length} PDF${pdfFiles.length>1?'s':''}`)
     : 'Replace mode — auto scan';
   document.getElementById('summaryCount').textContent =
     `${modeLabel} · all pages · ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''}`;
@@ -630,31 +642,61 @@ function updateSelInfo(){
   document.getElementById('btn2').disabled=n===0;
 }
 
-// ── Step 2B/C: Draw selection ───────────────────────────────────────────────
-async function startDraw(erase) {
-  drawMode=true; eraseMode=erase; manualBoundsArray=[];
+// ── Step 2B/C: Draw selection (per-file) ───────────────────────────────────
+function startDraw(erase) {
+  drawMode=true; eraseMode=erase;
+  currentDrawFileIdx=0;
+  manualBoundsPerFile=pdfFiles.map(()=>[]);
   document.getElementById('modeSelector').classList.add('hidden');
   document.getElementById('resultsArea').classList.add('hidden');
   document.getElementById('scanningArea').classList.add('hidden');
   document.getElementById('drawArea').classList.remove('hidden');
-  document.getElementById('btnDraw').disabled=true;
-  document.getElementById('selConfirm').classList.add('hidden');
-  document.getElementById('clearAreasBtn').style.display='none';
   document.getElementById('selConfirm').className='selection-confirm'+(erase?' erase':'');
   document.getElementById('eraseNoteBanner').classList.toggle('hidden',!erase);
+  renderDrawForFile(0);
+}
+
+async function renderDrawForFile(fileIdx) {
+  currentDrawFileIdx=fileIdx;
+  const file=pdfFiles[fileIdx];
+  const isLast=fileIdx===pdfFiles.length-1;
+
+  // File progress header
+  document.getElementById('drawFileCount').textContent=`PDF ${fileIdx+1} of ${pdfFiles.length}`;
+  document.getElementById('drawFileName').textContent=file.name;
+  const dots=document.getElementById('drawFileDots');
+  dots.innerHTML=pdfFiles.map((_,i)=>{
+    const bg=i<fileIdx?'#22c55e':i===fileIdx?'#2563eb':'#e5e7eb';
+    const label=i<fileIdx?'Done':i===fileIdx?'Current':'Pending';
+    return `<div title="${label}" style="width:9px;height:9px;border-radius:50%;background:${bg};"></div>`;
+  }).join('');
+
+  // Button label — allow skipping files with no boxes drawn
+  const btnDraw=document.getElementById('btnDraw');
+  btnDraw.textContent=isLast?'Continue →':'Next PDF →';
+  btnDraw.disabled=false;
+
+  // Reset canvas state for this file
+  drawStart=null; drawEnd=null; isDrawing=false;
+  const existingBoxes=manualBoundsPerFile[fileIdx]||[];
+  document.getElementById('clearAreasBtn').style.display=existingBoxes.length?'inline':'none';
+  document.getElementById('selConfirm').classList.toggle('hidden',!existingBoxes.length);
+  if(existingBoxes.length){
+    document.getElementById('selDims').textContent=`${existingBoxes.length} area${existingBoxes.length>1?'s':''} selected`;
+  }
+
+  // Loading state
   document.getElementById('drawHint').textContent='Loading page preview…';
 
-  // Count total pages for the note
-  let totalPages=0;
-  for(const f of pdfFiles){const b=await f.arrayBuffer();const p=await pdfjsLib.getDocument({data:new Uint8Array(b)}).promise;totalPages+=p.numPages;}
-  const noteEl=document.getElementById('pageCountNote');
-  const pageWord=totalPages===1?'page':'pages';
-  const fileWord=pdfFiles.length===1?'PDF':'PDFs';
-  noteEl.innerHTML=`✓ Showing page 1 of your first PDF. This selection will be applied to <strong>all ${totalPages} ${pageWord}</strong> across all ${pdfFiles.length} ${fileWord}.`;
-
-  const file=pdfFiles[0];
+  // Render page 1 of this file
   const buf=await file.arrayBuffer();
   const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+  const pageCount=pdf.numPages;
+
+  // Page count note
+  document.getElementById('pageCountNote').innerHTML=
+    `Showing page 1. Selection applies to <strong>all ${pageCount} page${pageCount>1?'s':''}</strong> of this PDF.`;
+
   const page=await pdf.getPage(1);
   const vp0=page.getViewport({scale:1});
   const maxW=document.getElementById('canvasWrap').offsetWidth||520;
@@ -663,14 +705,20 @@ async function startDraw(erase) {
 
   const canvas=document.getElementById('pageCanvas');
   const vp=page.getViewport({scale});
-  canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+  canvas.width=Math.round(vp.width); canvas.height=Math.round(vp.height);
   drawCtx=canvas.getContext('2d');
   await page.render({canvasContext:drawCtx,viewport:vp}).promise;
   drawPageImage=drawCtx.getImageData(0,0,canvas.width,canvas.height);
-  document.getElementById('drawHint').textContent=erase
-    ?'Draw a box around the area you want to remove'
-    :'Draw a box around where you want the new logo placed';
 
+  // Re-draw any previously confirmed boxes for this file
+  if(existingBoxes.length) redrawSel();
+
+  const hint=existingBoxes.length
+    ?`${existingBoxes.length} area(s) marked — draw more or click ${isLast?'Continue':'Next PDF'}`
+    :(eraseMode?'Draw a box around the area you want to remove':'Draw a box around where you want the new logo placed');
+  document.getElementById('drawHint').textContent=hint;
+
+  // Canvas event handlers
   canvas.onmousedown=e=>{isDrawing=true;drawStart=getPos(canvas,e);drawEnd={...drawStart};};
   canvas.onmousemove=e=>{if(!isDrawing)return;drawEnd=getPos(canvas,e);redrawSel();};
   canvas.onmouseup  =e=>{if(!isDrawing)return;isDrawing=false;drawEnd=getPos(canvas,e);redrawSel();finalizeSel();};
@@ -695,16 +743,15 @@ function redrawSel(){
   if(!drawPageImage)return;
   drawCtx.putImageData(drawPageImage,0,0);
   const{w:pW,h:pH,scale}=drawPageDims;
-  // Draw all confirmed boxes (more opaque)
-  for(const b of manualBoundsArray){
-    const cx=b.x*scale, cy=(pH-b.y-b.h)*scale, cw=b.w*scale, ch=b.h*scale;
+  const arr=manualBoundsPerFile[currentDrawFileIdx]||[];
+  for(let i=0;i<arr.length;i++){
+    const b=arr[i];
+    const cx=b.x*scale,cy=(pH-b.y-b.h)*scale,cw=b.w*scale,ch=b.h*scale;
     drawBox(cx,cy,cw,ch,0.25);
-    // Label each box
     drawCtx.fillStyle=eraseMode?'#dc2626':'#2563eb';
     drawCtx.font='bold 11px sans-serif';
-    drawCtx.fillText('Area '+(manualBoundsArray.indexOf(b)+1), cx+4, cy+13);
+    drawCtx.fillText('Area '+(i+1),cx+4,cy+13);
   }
-  // Draw current in-progress box (lighter)
   if(drawStart&&drawEnd&&isDrawing){
     const x=Math.min(drawStart.x,drawEnd.x),y=Math.min(drawStart.y,drawEnd.y);
     const w=Math.abs(drawEnd.x-drawStart.x),h=Math.abs(drawEnd.y-drawStart.y);
@@ -717,26 +764,31 @@ function finalizeSel(){
   const x1=Math.min(drawStart.x,drawEnd.x),y1=Math.min(drawStart.y,drawEnd.y);
   const x2=Math.max(drawStart.x,drawEnd.x),y2=Math.max(drawStart.y,drawEnd.y);
   if(x2-x1<8||y2-y1<8){document.getElementById('drawHint').textContent='Too small — try again with a larger area';return;}
-  manualBoundsArray.push({x:x1/scale,y:pH-y2/scale,w:(x2-x1)/scale,h:(y2-y1)/scale});
+  manualBoundsPerFile[currentDrawFileIdx].push({x:x1/scale,y:pH-y2/scale,w:(x2-x1)/scale,h:(y2-y1)/scale});
   redrawSel();
-  const n=manualBoundsArray.length;
+  const n=manualBoundsPerFile[currentDrawFileIdx].length;
   const word=n===1?'area':'areas';
   document.getElementById('selDims').textContent=`${n} ${word} selected`;
   document.getElementById('selConfirm').classList.remove('hidden');
   document.getElementById('btnDraw').disabled=false;
   document.getElementById('clearAreasBtn').style.display='inline';
-  document.getElementById('drawHint').textContent=`${n} ${word} marked — draw another or click Continue`;
+  const isLastFile=currentDrawFileIdx===pdfFiles.length-1;
+  document.getElementById('drawHint').textContent=`${n} ${word} marked — draw another or click ${isLastFile?'Continue':'Next PDF'}`;
 }
 function clearAllAreas(){
-  manualBoundsArray=[];
+  manualBoundsPerFile[currentDrawFileIdx]=[];
   if(drawPageImage)drawCtx.putImageData(drawPageImage,0,0);
   document.getElementById('selConfirm').classList.add('hidden');
   document.getElementById('btnDraw').disabled=true;
   document.getElementById('drawHint').textContent='All areas cleared — draw again';
 }
 function confirmDraw(){
-  if(!manualBoundsArray.length)return;
-  goStep3();
+  const isLast=currentDrawFileIdx===pdfFiles.length-1;
+  if(!isLast){
+    renderDrawForFile(currentDrawFileIdx+1);
+  }else{
+    goStep3();
+  }
 }
 
 // ── Step 3: Logo upload ─────────────────────────────────────────────────────
@@ -806,8 +858,8 @@ async function processSingleFile(file, fileIdx, logoBuf, logoMime){
     const page=pages[i],pageNum=i+1;
     let boundsToProcess=[];
 
-    if(drawMode&&manualBoundsArray.length){
-      boundsToProcess=[...manualBoundsArray];
+    if(drawMode){
+      boundsToProcess=[...(manualBoundsPerFile[fileIdx]||[])];
     }else{
       const selBounds=[...selectedIds].map(id=>uniqueImages.find(u=>u.id===id)?.bound).filter(Boolean);
       boundsToProcess=scanResults
@@ -887,7 +939,7 @@ function resetAll(){
   pdfFiles=[];if(logoURL)URL.revokeObjectURL(logoURL);
   logoFile=null;logoURL=null;scanResults=[];uniqueImages=[];
   selectedIds.clear();processedFiles=[];
-  drawMode=false;eraseMode=false;manualBoundsArray=[];drawPageImage=null;
+  drawMode=false;eraseMode=false;manualBoundsPerFile=[];currentDrawFileIdx=0;drawPageImage=null;
   document.getElementById('pdfList').innerHTML='';
   document.getElementById('btn1').disabled=true;
   document.getElementById('pdfIn').value='';
