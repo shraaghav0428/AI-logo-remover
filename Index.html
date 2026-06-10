@@ -335,8 +335,8 @@
 </footer>
 
 <!-- CDN Libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
@@ -344,7 +344,7 @@
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
 pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATE
@@ -790,6 +790,9 @@ function updateProcProgress(fileIdx, pct) {
 // PDF PROCESSING
 // ─────────────────────────────────────────────────────────────────────────────
 async function processSingleFile(file, fileIdx, logoBuf, logoMime) {
+  if (typeof PDFLib === 'undefined') {
+    throw new Error('PDF library failed to load. Check your internet connection and refresh the page.');
+  }
   const { PDFDocument, rgb } = PDFLib;
   updateProcProgress(fileIdx, 5);
 
@@ -827,16 +830,10 @@ async function processSingleFile(file, fileIdx, logoBuf, logoMime) {
 
     for (const r of toReplace) {
       const b = r.bound;
-      // White rectangle over the original image
+      // Cover the original image with white
       page.drawRectangle({ x: b.x, y: b.y, width: b.w, height: b.h, color: rgb(1,1,1), borderWidth: 0 });
-      // New logo, centred and fitted within the same bounding box
-      const dims = logoImg.scaleToFit(b.w, b.h);
-      page.drawImage(logoImg, {
-        x: b.x + (b.w - dims.width)  / 2,
-        y: b.y + (b.h - dims.height) / 2,
-        width:  dims.width,
-        height: dims.height
-      });
+      // Draw new logo at EXACTLY the same position and size as the original image
+      page.drawImage(logoImg, { x: b.x, y: b.y, width: b.w, height: b.h });
     }
 
     updateProcProgress(fileIdx, 30 + ((i+1)/pages.length) * 65);
