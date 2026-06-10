@@ -593,6 +593,7 @@ function finalizeDraw() {
     x: x1 / scale, y: pH - y2 / scale,
     w: (x2 - x1) / scale, h: (y2 - y1) / scale
   });
+  redrawAll(); // redraw immediately so the confirmed box stays visible
   const n = manualBoundsPerFile[currentDrawFileIdx].length;
   const isLast = currentDrawFileIdx === pdfFiles.length - 1;
   document.getElementById('selDims').textContent = `${n} area${n > 1 ? 's' : ''} selected`;
@@ -831,4 +832,3 @@ function fmtSize(b) {
 renderSteps();
 </script>
 </body>
-</html>
