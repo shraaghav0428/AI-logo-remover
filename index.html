@@ -215,7 +215,10 @@
       <div id="thumbGrid" class="thumb-grid"></div>
       <div id="noImagesMsg" class="no-images hidden">
         <strong>No embedded images found</strong>
-        <p>These PDFs don't contain any raster images. Logos in CAD files are sometimes vector-based — the AI version can detect those.</p>
+        <p>These PDFs use vector logos — common in CAD files. Use AI Detection to find and replace them.</p>
+        <button class="btn btn-primary" onclick="runAIDetection()" style="max-width:260px;margin:16px auto 0;">
+          ✦ Try AI Detection
+        </button>
       </div>
       <p class="selection-info" id="selInfo"></p>
       <div class="btn-row">
@@ -915,6 +918,135 @@ function fmtSize(bytes) {
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
   return (bytes/(1024*1024)).toFixed(1) + ' MB';
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AI LOGO DETECTION (Gemini Vision via Vercel backend)
+// ─────────────────────────────────────────────────────────────────────────────
+const BACKEND_URL = 'https://ai-backend-hazel-ten.vercel.app';
+
+async function runAIDetection() {
+  // Reset any previous scan results
+  scanResults  = [];
+  uniqueImages = [];
+  selectedIds.clear();
+  let idCounter = 0;
+
+  // Show scanning UI
+  document.getElementById('noImagesMsg').classList.add('hidden');
+  document.getElementById('scanningArea').classList.remove('hidden');
+  document.getElementById('resultsArea').classList.add('hidden');
+  document.getElementById('step2sub').textContent = 'AI is scanning your PDFs for logos…';
+
+  let totalPages = 0;
+  const pageCounts = [];
+  for (const file of pdfFiles) {
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+    pageCounts.push(pdf.numPages);
+    totalPages += pdf.numPages;
+  }
+
+  let scanned = 0;
+
+  for (let fi = 0; fi < pdfFiles.length; fi++) {
+    const file = pdfFiles[fi];
+    const buf  = await file.arrayBuffer();
+    const pdf  = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+
+    for (let pn = 1; pn <= pdf.numPages; pn++) {
+      const pct = Math.round((scanned / totalPages) * 100);
+      document.getElementById('scanBar').style.width = pct + '%';
+      document.getElementById('scanPct').textContent = pct + '%';
+      document.getElementById('scanLabel').textContent = `AI scanning page ${pn} of ${pdf.numPages}`;
+      document.getElementById('scanSub').textContent   = `File ${fi+1} of ${pdfFiles.length}: ${file.name}`;
+
+      await new Promise(r => setTimeout(r, 0));
+
+      const page   = await pdf.getPage(pn);
+      const vpBase = page.getViewport({ scale: 1 });
+      const pageW  = vpBase.width;
+      const pageH  = vpBase.height;
+
+      // Render page to canvas for Gemini
+      const MAX_PX = 1024;
+      const scale  = Math.min(1.5, MAX_PX / Math.max(pageW, pageH));
+      const vp     = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(vp.width);
+      canvas.height = Math.round(vp.height);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+
+      // Convert to JPEG base64 (smaller payload)
+      const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+
+      try {
+        const resp = await fetch(`${BACKEND_URL}/api/detect-logo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: base64,
+            mimeType: 'image/jpeg',
+            imageWidth:  canvas.width,
+            imageHeight: canvas.height,
+            pageWidth:   pageW,
+            pageHeight:  pageH
+          })
+        });
+
+        const { bounds, error } = await resp.json();
+
+        if (error) {
+          console.error('AI detection error:', error);
+        } else if (bounds && bounds.length > 0) {
+          for (const b of bounds) {
+            // Crop thumbnail from rendered canvas
+            const sx = Math.round(b.imgLeft   * canvas.width);
+            const sy = Math.round(b.imgTop    * canvas.height);
+            const sw = Math.round((b.imgRight  - b.imgLeft)   * canvas.width);
+            const sh = Math.round((b.imgBottom - b.imgTop)    * canvas.height);
+            let thumbnail = null;
+            if (sw > 0 && sh > 0) {
+              const tc = document.createElement('canvas');
+              tc.width = sw; tc.height = sh;
+              tc.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+              thumbnail = tc.toDataURL('image/png');
+            }
+
+            const bound = { x: b.x, y: b.y, w: b.w, h: b.h };
+            const id    = idCounter++;
+            scanResults.push({ fileIdx: fi, pageNum: pn, bound, id });
+
+            if (!uniqueImages.some(u => sameSize(u.bound, bound))) {
+              uniqueImages.push({ id, bound, thumbnail, fileIdx: fi, pageNum: pn });
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Backend call failed:', err);
+      }
+
+      scanned++;
+    }
+  }
+
+  document.getElementById('scanBar').style.width = '100%';
+  document.getElementById('scanPct').textContent = '100%';
+
+  await new Promise(r => setTimeout(r, 300));
+  document.getElementById('scanningArea').classList.add('hidden');
+  document.getElementById('resultsArea').classList.remove('hidden');
+
+  if (uniqueImages.length === 0) {
+    document.getElementById('thumbGrid').classList.add('hidden');
+    document.getElementById('noImagesMsg').classList.remove('hidden');
+    document.getElementById('noImagesMsg').querySelector('p').textContent =
+      'AI could not detect any logos on these pages. The logos may be too small or blended into the background.';
+    document.getElementById('noImagesMsg').querySelector('button')?.remove();
+  } else {
+    renderThumbnailGrid();
+  }
 }
 
 // ── Boot
