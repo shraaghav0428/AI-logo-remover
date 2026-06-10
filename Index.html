@@ -537,7 +537,7 @@ async function getBoundsOnPage(pdf, pageNum) {
     const args = ops.argsArray[i];
     if      (fn === OPS.save)    { stack.push([...mat]); }
     else if (fn === OPS.restore) { if (stack.length) mat = stack.pop(); }
-    else if (fn === OPS.transform) { mat = mulMat(mat, args); }
+    else if (fn === OPS.transform) { mat = mulMat(args, mat); }
     else if (fn === OPS.paintImageXObject ||
              fn === OPS.paintInlineImageXObject ||
              fn === OPS.paintImageMaskXObject) {
@@ -548,23 +548,32 @@ async function getBoundsOnPage(pdf, pageNum) {
   return { page, bounds };
 }
 
-async function renderThumbnail(page, bound, pageViewportHeight) {
-  const SCALE = 2;
+async function renderThumbnail(page, bound) {
+  const vpBase = page.getViewport({ scale: 1 });
+  const pageH  = vpBase.height;
+  const pageW  = vpBase.width;
+  const MAX_PX = 1800;
+  const SCALE  = Math.min(2, MAX_PX / Math.max(pageW, pageH));
   const vp = page.getViewport({ scale: SCALE });
   const canvas = document.createElement('canvas');
-  canvas.width  = vp.width;
-  canvas.height = vp.height;
+  canvas.width  = Math.round(vp.width);
+  canvas.height = Math.round(vp.height);
   await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
 
-  // Convert PDF user-space (origin bottom-left, y-up) → canvas pixels (origin top-left, y-down)
-  const cx = Math.max(0, Math.round(bound.x * SCALE));
-  const cy = Math.max(0, Math.round((pageViewportHeight - bound.y - bound.h) * SCALE));
-  const cw = Math.max(1, Math.round(bound.w * SCALE));
-  const ch = Math.max(1, Math.round(bound.h * SCALE));
+  // PDF user space (origin bottom-left, y-up) to canvas pixels (origin top-left, y-down)
+  const cx = Math.round(bound.x * SCALE);
+  const cy = Math.round((pageH - bound.y - bound.h) * SCALE);
+  const cw = Math.round(bound.w * SCALE);
+  const ch = Math.round(bound.h * SCALE);
+  const sx = Math.max(0, cx);
+  const sy = Math.max(0, cy);
+  const sw = Math.min(cw, canvas.width  - sx);
+  const sh = Math.min(ch, canvas.height - sy);
+  if (sw <= 0 || sh <= 0) return null;
 
   const out = document.createElement('canvas');
-  out.width = cw; out.height = ch;
-  out.getContext('2d').drawImage(canvas, cx, cy, cw, ch, 0, 0, cw, ch);
+  out.width = sw; out.height = sh;
+  out.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
   return out.toDataURL('image/png');
 }
 
@@ -594,8 +603,7 @@ async function scanAllPDFs() {
     const file = pdfFiles[fi];
     const buf  = await file.arrayBuffer();
     const pdf  = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-    const pageOneVP = (await pdf.getPage(1)).getViewport({ scale: 1 });
-    const pageH = pageOneVP.height;
+
 
     for (let pn = 1; pn <= pdf.numPages; pn++) {
       // Update scanning UI
@@ -617,7 +625,7 @@ async function scanAllPDFs() {
         let thumbnail = null;
         const isFirstOccurrence = !uniqueImages.some(u => sameSize(u.bound, bound));
         if (pn === 1 || isFirstOccurrence) {
-          try { thumbnail = await renderThumbnail(page, bound, pageH); } catch(e) {}
+          try { thumbnail = await renderThumbnail(page, bound); } catch(e) {}
         }
 
         const id = idCounter++;
