@@ -49,17 +49,19 @@
     .btn-primary:hover:not(:disabled) { background: #1d4ed8; }
     .btn-primary:active:not(:disabled) { transform: scale(0.99); }
     .btn-primary:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
+    .btn-red { background: #dc2626; color: #fff; }
+    .btn-red:hover:not(:disabled) { background: #b91c1c; }
+    .btn-red:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
     .btn-outline { background: #fff; color: #374151; border: 1px solid #e5e7eb; }
     .btn-outline:hover:not(:disabled) { background: #f9fafb; }
-    .btn-outline:disabled { color: #9ca3af; cursor: not-allowed; }
     .btn-ghost { background: none; border: none; color: #2563eb; font-size: 13px; font-weight: 500; cursor: pointer; padding: 6px 0; width: auto; }
     .btn-ghost:hover { text-decoration: underline; }
     .mt20 { margin-top: 20px; }
-    .mt12 { margin-top: 12px; }
     .mt10 { margin-top: 10px; }
     .btn-row { display: flex; gap: 8px; margin-top: 20px; }
     .btn-row .btn-outline { flex: 1; }
     .btn-row .btn-primary { flex: 2; }
+    .btn-row .btn-red { flex: 2; }
     .err-inline { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #dc2626; margin-top: 8px; }
     .scan-progress { margin-bottom: 8px; }
     .scan-top { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
@@ -79,19 +81,20 @@
     .thumb-card.selected .thumb-check { display: flex; }
     .selection-info { font-size: 13px; color: #374151; margin-top: 14px; line-height: 1.5; }
     .selection-info strong { color: #2563eb; }
-    .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
-    .divider span { font-size: 11px; color: #9ca3af; white-space: nowrap; }
-    .option-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
-    .option-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; text-align: center; }
+    .option-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; }
+    .option-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 10px; cursor: pointer; transition: all 0.15s; text-align: center; }
     .option-card:hover { border-color: #2563eb; background: #eff6ff; }
-    .option-card-icon { font-size: 22px; margin-bottom: 6px; }
-    .option-card-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 3px; }
-    .option-card-desc { font-size: 11px; color: #6b7280; line-height: 1.4; }
+    .option-card.erase-card:hover { border-color: #dc2626; background: #fef2f2; }
+    .option-card-icon { font-size: 20px; margin-bottom: 6px; }
+    .option-card-title { font-size: 12px; font-weight: 600; color: #111; margin-bottom: 3px; }
+    .option-card-desc { font-size: 10px; color: #6b7280; line-height: 1.4; }
     .draw-canvas-wrap { position: relative; width: 100%; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: crosshair; }
     .draw-canvas-wrap canvas { display: block; width: 100%; }
     .draw-hint { font-size: 12px; color: #6b7280; margin-top: 8px; text-align: center; }
+    .page-count-note { font-size: 12px; color: #374151; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .erase-note { font-size: 12px; color: #7f1d1d; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
     .selection-confirm { padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 13px; color: #166534; margin-top: 10px; }
+    .selection-confirm.erase { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
     .logo-card { border: 1px solid #e5e7eb; border-radius: 11px; padding: 14px; }
     .logo-inner { display: flex; align-items: center; gap: 14px; }
     .logo-thumb-box { width: 64px; height: 64px; background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
@@ -102,6 +105,7 @@
     .change-btn { background: none; border: none; font-size: 12px; font-weight: 500; color: #2563eb; cursor: pointer; padding: 0; margin-top: 5px; display: block; }
     .change-btn:hover { text-decoration: underline; }
     .summary { background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 11px; padding: 14px; margin-bottom: 18px; }
+    .summary.erase-summary { background: #fef2f2; border-color: #fecaca; }
     .summary-row { display: flex; align-items: flex-start; gap: 12px; }
     .summary-logo { width: 48px; height: 48px; background: #fff; border: 1px solid #e5e7eb; border-radius: 7px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
     .summary-logo img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 3px; }
@@ -120,10 +124,10 @@
     .err-banner { padding: 13px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 11px; margin-bottom: 14px; }
     .err-title { font-size: 13px; font-weight: 500; color: #991b1b; }
     .err-detail { font-size: 12px; color: #dc2626; margin-top: 3px; }
+    .no-logo-needed { background: #fffbeb; border: 1px solid #fde68a; border-radius: 11px; padding: 14px; margin-bottom: 18px; font-size: 13px; color: #92400e; }
     .footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #f0f0f0; padding: 9px 20px; text-align: center; }
     .footer p { font-size: 11px; color: #9ca3af; }
     .hidden { display: none !important; }
-    .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 9px; padding: 10px 14px; font-size: 12px; color: #1e40af; margin-bottom: 14px; line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -137,7 +141,7 @@
     </div>
     <div>
       <div class="app-title">PDF Logo Replacer</div>
-      <div class="app-sub">Detect, select and swap logos across PDF files</div>
+      <div class="app-sub">Replace or remove logos and markings across PDF files</div>
     </div>
   </div>
 </header>
@@ -145,7 +149,7 @@
 <main class="main">
   <div class="steps" id="stepBar"></div>
 
-  <!-- STEP 1: Upload PDFs -->
+  <!-- STEP 1 -->
   <div class="panel show" id="panel1">
     <h2>Upload your PDFs</h2>
     <p class="sub">Up to 3 files · 10MB per file · 30MB total</p>
@@ -167,10 +171,10 @@
     <button class="btn btn-primary mt20" id="btn1" onclick="goStep2()" disabled>Continue →</button>
   </div>
 
-  <!-- STEP 2: Find Logo -->
+  <!-- STEP 2 -->
   <div class="panel" id="panel2">
-    <h2 id="s2title">Find the logo</h2>
-    <p class="sub" id="s2sub">Choose how to locate the logo on your PDF.</p>
+    <h2 id="s2title">Find the area</h2>
+    <p class="sub" id="s2sub">Choose how to locate what you want to change.</p>
 
     <!-- Mode selector -->
     <div id="modeSelector">
@@ -180,16 +184,21 @@
           <div class="option-card-title">Auto scan</div>
           <div class="option-card-desc">Detects embedded images automatically</div>
         </div>
-        <div class="option-card" onclick="startDraw()">
+        <div class="option-card" onclick="startDraw(false)">
           <div class="option-card-icon">✏️</div>
-          <div class="option-card-title">Draw selection</div>
-          <div class="option-card-desc">Draw a box around the logo yourself</div>
+          <div class="option-card-title">Draw & replace</div>
+          <div class="option-card-desc">Draw a box, swap it with your logo</div>
+        </div>
+        <div class="option-card erase-card" onclick="startDraw(true)">
+          <div class="option-card-icon">🗑️</div>
+          <div class="option-card-title">Draw & erase</div>
+          <div class="option-card-desc">Draw a box, wipe it out completely</div>
         </div>
       </div>
       <button class="btn btn-outline mt20" onclick="goStep1()">← Back</button>
     </div>
 
-    <!-- Scanning progress -->
+    <!-- Scanning -->
     <div id="scanningArea" class="hidden">
       <div class="scan-progress">
         <div class="scan-top">
@@ -206,8 +215,11 @@
       <div id="thumbGrid" class="thumb-grid"></div>
       <div id="noImagesMsg" class="hidden" style="text-align:center;padding:24px 0;">
         <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:6px;">No embedded images found</p>
-        <p style="font-size:13px;color:#6b7280;margin-bottom:16px;">This PDF uses vector or text logos. Use "Draw selection" to mark the logo area manually.</p>
-        <button class="btn btn-outline" onclick="startDraw()" style="max-width:220px;margin:0 auto;">✏️ Draw selection instead</button>
+        <p style="font-size:13px;color:#6b7280;margin-bottom:16px;">This PDF likely uses vector or text logos. Try drawing your selection manually.</p>
+        <div style="display:flex;gap:8px;max-width:360px;margin:0 auto;">
+          <button class="btn btn-outline" onclick="startDraw(false)" style="flex:1;padding:10px;">✏️ Draw & replace</button>
+          <button class="btn btn-outline" onclick="startDraw(true)" style="flex:1;padding:10px;">🗑️ Draw & erase</button>
+        </div>
       </div>
       <p class="selection-info" id="selInfo"></p>
       <div class="btn-row">
@@ -215,17 +227,21 @@
         <button class="btn btn-primary" id="btn2" onclick="goStep3()" disabled>Continue →</button>
       </div>
       <div style="text-align:center;margin-top:12px;">
-        <button class="btn-ghost" onclick="startDraw()">Not what you wanted? Draw manually instead</button>
+        <button class="btn-ghost" onclick="backToMode()">Try a different method instead</button>
       </div>
     </div>
 
-    <!-- Draw selection -->
+    <!-- Draw / Erase -->
     <div id="drawArea" class="hidden">
-      <div class="info-box">Click and drag on the page below to draw a box around the logo. It will be replaced at the same position on every page.</div>
+      <div id="pageCountNote" class="page-count-note"></div>
+      <div id="eraseNoteBanner" class="erase-note hidden">
+        🗑️ <span>Erase mode — the selected area will be removed. No logo needed.</span>
+      </div>
       <div class="draw-canvas-wrap" id="canvasWrap">
         <canvas id="pageCanvas"></canvas>
       </div>
-      <p class="draw-hint" id="drawHint">Click and drag to select the logo area</p>
+      <p class="draw-hint" id="drawHint">Click and drag to select the area</p>
+      <div style="text-align:right;margin-top:6px;"><button class="btn-ghost" onclick="clearAllAreas()" id="clearAreasBtn" style="font-size:11px;color:#dc2626;" class="hidden">✕ Clear all areas</button></div>
       <div id="selConfirm" class="selection-confirm hidden">
         ✓ Region selected — <span id="selDims"></span> · Drag again to adjust
       </div>
@@ -236,12 +252,12 @@
     </div>
   </div>
 
-  <!-- STEP 3: Logo + Process -->
+  <!-- STEP 3 -->
   <div class="panel" id="panel3">
-    <h2>Upload logo &amp; replace</h2>
-    <p class="sub">Upload your new logo. It replaces the selected area on all pages.</p>
+    <h2 id="s3title">Upload logo &amp; replace</h2>
+    <p class="sub" id="s3sub">Upload your new logo. It replaces the selected area on all pages.</p>
 
-    <div class="summary">
+    <div class="summary" id="s3summary">
       <div class="summary-row">
         <div id="summaryLogoBox" class="summary-logo hidden">
           <img id="summaryLogoImg" src="" alt="logo">
@@ -253,39 +269,46 @@
       </div>
     </div>
 
-    <div id="logoDzArea">
-      <div class="dropzone" id="logoDz">
-        <input type="file" id="logoIn" accept=".png,.jpg,.jpeg,image/png,image/jpeg" style="display:none">
-        <div class="dz-icon">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-          </svg>
+    <!-- Logo upload (hidden in erase mode) -->
+    <div id="logoSection">
+      <div id="logoDzArea">
+        <div class="dropzone" id="logoDz">
+          <input type="file" id="logoIn" accept=".png,.jpg,.jpeg,image/png,image/jpeg" style="display:none">
+          <div class="dz-icon">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+            </svg>
+          </div>
+          <div class="dz-main">Drag & drop your logo, or <span>browse</span></div>
+          <div class="dz-hint">PNG or JPG</div>
         </div>
-        <div class="dz-main">Drag & drop your logo, or <span>browse</span></div>
-        <div class="dz-hint">PNG or JPG</div>
       </div>
-    </div>
-
-    <div id="logoPreviewArea" class="hidden">
-      <div class="logo-card">
-        <div class="logo-inner">
-          <div class="logo-thumb-box"><img id="logoPreviewImg" src="" alt="logo"></div>
-          <div class="logo-info">
-            <div class="logo-fname" id="logoFname"></div>
-            <div class="logo-fsize" id="logoFsize"></div>
-            <button class="change-btn" onclick="clearLogo()">Change logo</button>
+      <div id="logoPreviewArea" class="hidden">
+        <div class="logo-card">
+          <div class="logo-inner">
+            <div class="logo-thumb-box"><img id="logoPreviewImg" src="" alt="logo"></div>
+            <div class="logo-info">
+              <div class="logo-fname" id="logoFname"></div>
+              <div class="logo-fsize" id="logoFsize"></div>
+              <button class="change-btn" onclick="clearLogo()">Change logo</button>
+            </div>
           </div>
         </div>
       </div>
+      <div id="logoErr" class="err-inline hidden">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+        <span id="logoErrTxt"></span>
+      </div>
     </div>
 
-    <div id="logoErr" class="err-inline hidden">
-      <svg width="13" height="13" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
-      <span id="logoErrTxt"></span>
+    <!-- Erase mode — no logo needed -->
+    <div id="noLogoNeeded" class="no-logo-needed hidden">
+      ✓ No logo needed — the selected area will be completely removed from all pages.
     </div>
 
     <div id="stateIdle" class="mt20">
-      <button class="btn btn-primary" id="btn3" onclick="startProcess()" disabled>Replace logos</button>
+      <button class="btn btn-primary" id="btn3Replace" onclick="startProcess()" disabled>Replace logos</button>
+      <button class="btn btn-red hidden" id="btn3Erase" onclick="startProcess()">Erase selected area</button>
       <button class="btn btn-outline mt10" onclick="backToStep2()">← Back</button>
     </div>
     <div id="stateRunning" class="hidden mt20">
@@ -305,7 +328,7 @@
         </div>
         <div>
           <div class="success-title" id="successTitle">Processed successfully</div>
-          <div class="success-sub">Logos replaced on all pages</div>
+          <div class="success-sub" id="successSub">Changes applied to all pages</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="doDownload()">
@@ -332,12 +355,11 @@
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
-// ── State ─────────────────────────────────────────────────────────────────
+// ── State ──────────────────────────────────────────────────────────────────
 let pdfFiles       = [];
 let logoFile       = null;
 let logoURL        = null;
@@ -346,38 +368,37 @@ let uniqueImages   = [];
 let selectedIds    = new Set();
 let processedFiles = [];
 let currentStep    = 1;
-
-// Manual draw state
-let drawMode       = false;
-let manualBounds   = null;   // { x, y, w, h } in PDF points
+let drawMode       = false;   // true when user drew a selection manually
+let eraseMode      = false;   // true = wipe out, false = replace with logo
+let manualBoundsArray = [];   // [{ x, y, w, h }] — multiple regions
 let drawCtx        = null;
 let drawPageImage  = null;
-let drawPageDims   = null;   // { w, h, scale }
+let drawPageDims   = null;    // { w, h, scale }
 let drawStart      = null;
 let drawEnd        = null;
 let isDrawing      = false;
 
-const STEP_LABELS = ['Upload PDFs', 'Find logo', 'Replace & download'];
+const STEP_LABELS = ['Upload PDFs', 'Find area', 'Apply & download'];
 
 // ── Step indicator ─────────────────────────────────────────────────────────
 function renderSteps() {
   const bar = document.getElementById('stepBar');
   bar.innerHTML = '';
   STEP_LABELS.forEach((label, i) => {
-    const n = i + 1;
-    const done = currentStep > n, active = currentStep === n;
+    const n = i + 1, done = currentStep > n, active = currentStep === n;
     const cls = done ? 'done' : active ? 'active' : 'todo';
     bar.insertAdjacentHTML('beforeend', `
       <div class="step">
         <div class="step-dot ${cls}">
-          ${done ? '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : n}
+          ${done
+            ? '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>'
+            : n}
         </div>
         <div class="step-name ${active ? 'active-lbl' : done ? 'done-lbl' : 'todo-lbl'}">${label}</div>
       </div>`);
-    if (i < STEP_LABELS.length - 1) {
+    if (i < STEP_LABELS.length - 1)
       bar.insertAdjacentHTML('beforeend',
         `<div class="step-line ${done ? 'done-line' : 'todo-line'}"></div>`);
-    }
   });
 }
 
@@ -388,44 +409,48 @@ function showPanel(n) {
   renderSteps();
 }
 
-// ── Navigation ────────────────────────────────────────────────────────────
+// ── Navigation ─────────────────────────────────────────────────────────────
 function goStep1() { showPanel(1); }
 
 function goStep2() {
   scanResults = []; uniqueImages = []; selectedIds.clear();
-  drawMode = false; manualBounds = null;
+  drawMode = false; eraseMode = false; manualBounds = null;
   showPanel(2);
-  document.getElementById('modeSelector').classList.remove('hidden');
-  document.getElementById('scanningArea').classList.add('hidden');
-  document.getElementById('resultsArea').classList.add('hidden');
-  document.getElementById('drawArea').classList.add('hidden');
-  document.getElementById('s2title').textContent = 'Find the logo';
-  document.getElementById('s2sub').textContent = 'Choose how to locate the logo on your PDF.';
+  showMode();
 }
 
-function backToMode() {
+function showMode() {
   document.getElementById('modeSelector').classList.remove('hidden');
   document.getElementById('scanningArea').classList.add('hidden');
   document.getElementById('resultsArea').classList.add('hidden');
   document.getElementById('drawArea').classList.add('hidden');
 }
 
-function backToStep2() {
-  showPanel(2);
-  backToMode();
-}
+function backToMode() { showMode(); }
+function backToStep2() { showPanel(2); showMode(); }
 
 function goStep3() {
-  const isManual = drawMode && manualBounds;
-  const selCount = isManual ? 1 : selectedIds.size;
-  const totalInst = isManual
-    ? pdfFiles.length + ' PDF(s) — all pages'
-    : countTotalInstances() + ' instance(s)';
+  // Configure step 3 for the current mode
+  const isErase = eraseMode;
+  const isManual = drawMode;
 
+  // Title / subtitle
+  document.getElementById('s3title').textContent =
+    isErase ? 'Erase selected area' : 'Upload logo & replace';
+  document.getElementById('s3sub').textContent =
+    isErase
+      ? 'The area you drew will be completely removed from all pages of every PDF.'
+      : 'Upload your new logo. It will be placed in the drawn area on all pages.';
+
+  // Summary card
+  const summaryEl = document.getElementById('s3summary');
+  summaryEl.className = 'summary' + (isErase ? ' erase-summary' : '');
+
+  const modeLabel = isManual
+    ? (isErase ? 'Erase mode — manual selection' : 'Replace mode — manual selection')
+    : 'Replace mode — auto scan';
   document.getElementById('summaryCount').textContent =
-    isManual
-      ? `Manual selection · applied to all pages · ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''}`
-      : `${selCount} image type${selCount > 1 ? 's' : ''} · ${totalInst}`;
+    `${modeLabel} · all pages · ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''}`;
 
   document.getElementById('summaryFiles').innerHTML = pdfFiles.map(f => `
     <div class="summary-file">
@@ -435,14 +460,23 @@ function goStep3() {
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${f.name}</span>
     </div>`).join('');
 
+  // Show/hide logo upload vs erase banner
+  document.getElementById('logoSection').classList.toggle('hidden', isErase);
+  document.getElementById('noLogoNeeded').classList.toggle('hidden', !isErase);
+  document.getElementById('summaryLogoBox').classList.add('hidden');
+
+  // Show correct action button
+  document.getElementById('btn3Replace').classList.toggle('hidden', isErase);
+  document.getElementById('btn3Erase').classList.toggle('hidden', !isErase);
+  document.getElementById('btn3Replace').disabled = !logoFile;
+
   setProcState('idle');
   showPanel(3);
 }
 
 // ── Step 1: PDF upload ─────────────────────────────────────────────────────
-(function() {
-  const dz = document.getElementById('pdfDz');
-  const inp = document.getElementById('pdfIn');
+(function () {
+  const dz = document.getElementById('pdfDz'), inp = document.getElementById('pdfIn');
   dz.addEventListener('click', () => inp.click());
   inp.addEventListener('change', e => addPDFs(Array.from(e.target.files)));
   dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
@@ -485,404 +519,375 @@ function removePDF(i) {
   document.getElementById('btn1').disabled = !pdfFiles.length;
 }
 
-// ── Step 2A: Auto scan ────────────────────────────────────────────────────
+// ── Step 2A: Auto scan ─────────────────────────────────────────────────────
 function mulMat(m1, m2) {
-  const [a1,b1,c1,d1,e1,f1] = m1, [a2,b2,c2,d2,e2,f2] = m2;
-  return [a1*a2+b1*c2, a1*b2+b1*d2, c1*a2+d1*c2, c1*b2+d1*d2, e1*a2+f1*c2+e2, e1*b2+f1*d2+f2];
+  const [a1,b1,c1,d1,e1,f1]=m1,[a2,b2,c2,d2,e2,f2]=m2;
+  return [a1*a2+b1*c2,a1*b2+b1*d2,c1*a2+d1*c2,c1*b2+d1*d2,e1*a2+f1*c2+e2,e1*b2+f1*d2+f2];
 }
-
 function matBBox(m) {
-  const [a,b,c,d,e,f] = m;
-  const xs = [e, e+a, e+a+c, e+c], ys = [f, f+b, f+b+d, f+d];
-  const x = Math.min(...xs), y = Math.min(...ys);
-  return { x, y, w: Math.max(...xs)-x, h: Math.max(...ys)-y };
+  const[a,b,c,d,e,f]=m,xs=[e,e+a,e+a+c,e+c],ys=[f,f+b,f+b+d,f+d];
+  const x=Math.min(...xs),y=Math.min(...ys);
+  return{x,y,w:Math.max(...xs)-x,h:Math.max(...ys)-y};
 }
-
 async function getBoundsOnPage(pdf, pn) {
   const page = await pdf.getPage(pn);
-  const ops = await page.getOperatorList();
-  const OPS = pdfjsLib.OPS;
-  const stack = []; let mat = [1,0,0,1,0,0]; const bounds = [];
-  for (let i = 0; i < ops.fnArray.length; i++) {
-    const fn = ops.fnArray[i], args = ops.argsArray[i];
-    if (fn===OPS.save) stack.push([...mat]);
-    else if (fn===OPS.restore) { if (stack.length) mat = stack.pop(); }
-    else if (fn===OPS.transform) mat = mulMat(args, mat);
-    else if (fn===OPS.paintImageXObject || fn===OPS.paintInlineImageXObject || fn===OPS.paintImageMaskXObject) {
-      const bb = matBBox(mat);
-      if (bb.w > 5 && bb.h > 5) bounds.push(bb);
+  const ops = await page.getOperatorList(), OPS = pdfjsLib.OPS;
+  const stack=[]; let mat=[1,0,0,1,0,0]; const bounds=[];
+  for (let i=0;i<ops.fnArray.length;i++) {
+    const fn=ops.fnArray[i],args=ops.argsArray[i];
+    if(fn===OPS.save) stack.push([...mat]);
+    else if(fn===OPS.restore){if(stack.length)mat=stack.pop();}
+    else if(fn===OPS.transform) mat=mulMat(args,mat);
+    else if(fn===OPS.paintImageXObject||fn===OPS.paintInlineImageXObject||fn===OPS.paintImageMaskXObject){
+      const bb=matBBox(mat);if(bb.w>5&&bb.h>5)bounds.push(bb);
     }
   }
-  return { page, bounds };
+  return{page,bounds};
 }
-
 async function renderThumbnail(page, bound) {
-  const vpBase = page.getViewport({ scale: 1 });
-  const pageH = vpBase.height, pageW = vpBase.width;
-  const SCALE = Math.min(2, 1800 / Math.max(pageW, pageH));
-  const vp = page.getViewport({ scale: SCALE });
-  const canvas = document.createElement('canvas');
-  canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
-  await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-  const cx = Math.round(bound.x * SCALE), cy = Math.round((pageH - bound.y - bound.h) * SCALE);
-  const cw = Math.round(bound.w * SCALE), ch = Math.round(bound.h * SCALE);
-  const sx = Math.max(0,cx), sy = Math.max(0,cy);
-  const sw = Math.min(cw, canvas.width-sx), sh = Math.min(ch, canvas.height-sy);
-  if (sw<=0||sh<=0) return null;
-  const out = document.createElement('canvas');
-  out.width = sw; out.height = sh;
-  out.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+  const vp0=page.getViewport({scale:1}),pH=vp0.height,pW=vp0.width;
+  const S=Math.min(2,1800/Math.max(pW,pH));
+  const vp=page.getViewport({scale:S});
+  const c=document.createElement('canvas');
+  c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+  await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+  const cx=Math.round(bound.x*S),cy=Math.round((pH-bound.y-bound.h)*S);
+  const cw=Math.round(bound.w*S),ch=Math.round(bound.h*S);
+  const sx=Math.max(0,cx),sy=Math.max(0,cy);
+  const sw=Math.min(cw,c.width-sx),sh=Math.min(ch,c.height-sy);
+  if(sw<=0||sh<=0)return null;
+  const out=document.createElement('canvas');
+  out.width=sw;out.height=sh;
+  out.getContext('2d').drawImage(c,sx,sy,sw,sh,0,0,sw,sh);
   return out.toDataURL('image/png');
 }
-
-function sameSize(b1, b2) {
-  return Math.abs(b1.w-b2.w)/Math.max(b1.w,b2.w,1)<0.12 && Math.abs(b1.h-b2.h)/Math.max(b1.h,b2.h,1)<0.12;
+function sameSize(b1,b2){
+  return Math.abs(b1.w-b2.w)/Math.max(b1.w,b2.w,1)<0.12&&Math.abs(b1.h-b2.h)/Math.max(b1.h,b2.h,1)<0.12;
 }
 
 async function startScan() {
-  drawMode = false;
+  drawMode=false;eraseMode=false;
   document.getElementById('modeSelector').classList.add('hidden');
   document.getElementById('scanningArea').classList.remove('hidden');
-  let idCounter = 0;
-  const pageCounts = [];
-  for (const f of pdfFiles) {
-    const buf = await f.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-    pageCounts.push(pdf.numPages);
-  }
-  const totalPages = pageCounts.reduce((a,b)=>a+b,0);
-  let scanned = 0;
-  for (let fi = 0; fi < pdfFiles.length; fi++) {
-    const buf = await pdfFiles[fi].arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-    for (let pn = 1; pn <= pdf.numPages; pn++) {
-      const pct = Math.round(scanned/totalPages*100);
-      document.getElementById('scanBar').style.width = pct+'%';
-      document.getElementById('scanPct').textContent = pct+'%';
-      document.getElementById('scanLabel').textContent = `Scanning page ${pn} of ${pdf.numPages}`;
-      document.getElementById('scanSub').textContent = `File ${fi+1} of ${pdfFiles.length}: ${pdfFiles[fi].name}`;
+  let idCounter=0;
+  const totals=[];
+  for(const f of pdfFiles){const buf=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;totals.push(pdf.numPages);}
+  const totalPages=totals.reduce((a,b)=>a+b,0);let scanned=0;
+  for(let fi=0;fi<pdfFiles.length;fi++){
+    const buf=await pdfFiles[fi].arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+    for(let pn=1;pn<=pdf.numPages;pn++){
+      const pct=Math.round(scanned/totalPages*100);
+      document.getElementById('scanBar').style.width=pct+'%';
+      document.getElementById('scanPct').textContent=pct+'%';
+      document.getElementById('scanLabel').textContent=`Scanning page ${pn} of ${pdf.numPages}`;
+      document.getElementById('scanSub').textContent=`File ${fi+1} of ${pdfFiles.length}: ${pdfFiles[fi].name}`;
       await new Promise(r=>setTimeout(r,0));
-      const { page, bounds } = await getBoundsOnPage(pdf, pn);
-      for (const bound of bounds) {
-        let thumbnail = null;
-        if (!uniqueImages.some(u=>sameSize(u.bound, bound))) {
-          try { thumbnail = await renderThumbnail(page, bound); } catch(e){}
-        }
-        const id = idCounter++;
-        scanResults.push({ fileIdx: fi, pageNum: pn, bound, id });
-        if (!uniqueImages.some(u=>sameSize(u.bound, bound))) {
-          uniqueImages.push({ id, bound, thumbnail, fileIdx: fi, pageNum: pn });
-        }
+      const{page,bounds}=await getBoundsOnPage(pdf,pn);
+      for(const bound of bounds){
+        let thumbnail=null;
+        if(!uniqueImages.some(u=>sameSize(u.bound,bound))){try{thumbnail=await renderThumbnail(page,bound);}catch(e){}}
+        const id=idCounter++;
+        scanResults.push({fileIdx:fi,pageNum:pn,bound,id});
+        if(!uniqueImages.some(u=>sameSize(u.bound,bound)))uniqueImages.push({id,bound,thumbnail,fileIdx:fi,pageNum:pn});
       }
       scanned++;
     }
   }
-  document.getElementById('scanBar').style.width = '100%';
-  document.getElementById('scanPct').textContent = '100%';
+  document.getElementById('scanBar').style.width='100%';
+  document.getElementById('scanPct').textContent='100%';
   await new Promise(r=>setTimeout(r,300));
   document.getElementById('scanningArea').classList.add('hidden');
   document.getElementById('resultsArea').classList.remove('hidden');
   renderThumbnailGrid();
 }
 
-function renderThumbnailGrid() {
-  const grid = document.getElementById('thumbGrid');
-  const none = document.getElementById('noImagesMsg');
-  if (!uniqueImages.length) {
-    grid.classList.add('hidden'); none.classList.remove('hidden');
-    document.getElementById('selInfo').textContent = '';
-    document.getElementById('btn2').disabled = true;
-    return;
-  }
-  none.classList.add('hidden'); grid.classList.remove('hidden');
-  grid.innerHTML = uniqueImages.map((img, i) => {
-    const instances = scanResults.filter(r=>sameSize(r.bound, img.bound)).length;
-    return `<div class="thumb-card" id="tc_${img.id}" onclick="toggleSelect(${img.id})">
-      <div class="thumb-img-wrap">
-        ${img.thumbnail ? `<img src="${img.thumbnail}" alt="image ${i+1}">` :
-          `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>`}
-      </div>
-      <div class="thumb-footer">${Math.round(img.bound.w)}x${Math.round(img.bound.h)} pt · ${instances} page${instances!==1?'s':''}</div>
+function renderThumbnailGrid(){
+  const grid=document.getElementById('thumbGrid'),none=document.getElementById('noImagesMsg');
+  if(!uniqueImages.length){grid.classList.add('hidden');none.classList.remove('hidden');document.getElementById('selInfo').textContent='';document.getElementById('btn2').disabled=true;return;}
+  none.classList.add('hidden');grid.classList.remove('hidden');
+  grid.innerHTML=uniqueImages.map((img,i)=>{
+    const inst=scanResults.filter(r=>sameSize(r.bound,img.bound)).length;
+    return`<div class="thumb-card" id="tc_${img.id}" onclick="toggleSelect(${img.id})">
+      <div class="thumb-img-wrap">${img.thumbnail?`<img src="${img.thumbnail}" alt="image ${i+1}">`:`<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>`}</div>
+      <div class="thumb-footer">${Math.round(img.bound.w)}x${Math.round(img.bound.h)} pt · ${inst} page${inst!==1?'s':''}</div>
       <div class="thumb-check"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
     </div>`;
   }).join('');
   updateSelInfo();
 }
-
-function toggleSelect(id) {
-  selectedIds.has(id) ? selectedIds.delete(id) : selectedIds.add(id);
-  document.getElementById(`tc_${id}`)?.classList.toggle('selected', selectedIds.has(id));
+function toggleSelect(id){
+  selectedIds.has(id)?selectedIds.delete(id):selectedIds.add(id);
+  document.getElementById(`tc_${id}`)?.classList.toggle('selected',selectedIds.has(id));
   updateSelInfo();
 }
-
-function countTotalInstances() {
-  return [...selectedIds].reduce((sum,id)=>{
-    const img = uniqueImages.find(u=>u.id===id);
-    return sum + (img ? scanResults.filter(r=>sameSize(r.bound,img.bound)).length : 0);
-  }, 0);
+function countTotalInstances(){
+  return[...selectedIds].reduce((s,id)=>{const img=uniqueImages.find(u=>u.id===id);return s+(img?scanResults.filter(r=>sameSize(r.bound,img.bound)).length:0);},0);
+}
+function updateSelInfo(){
+  const n=selectedIds.size,t=countTotalInstances();
+  document.getElementById('selInfo').innerHTML=n===0?'Tap an image above to select it.':`<strong>${n}</strong> type${n>1?'s':''} selected — <strong>${t}</strong> instance${t!==1?'s':''} will be replaced`;
+  document.getElementById('btn2').disabled=n===0;
 }
 
-function updateSelInfo() {
-  const n = selectedIds.size;
-  document.getElementById('selInfo').innerHTML = n===0
-    ? 'Tap an image above to select it for replacement.'
-    : `<strong>${n}</strong> type${n>1?'s':''} selected — <strong>${countTotalInstances()}</strong> instance${countTotalInstances()!==1?'s':''} will be replaced`;
-  document.getElementById('btn2').disabled = n===0;
-}
-
-// ── Step 2B: Draw selection ───────────────────────────────────────────────
-async function startDraw() {
-  drawMode = true;
-  manualBounds = null;
+// ── Step 2B/C: Draw selection ───────────────────────────────────────────────
+async function startDraw(erase) {
+  drawMode=true; eraseMode=erase; manualBoundsArray=[];
   document.getElementById('modeSelector').classList.add('hidden');
   document.getElementById('resultsArea').classList.add('hidden');
   document.getElementById('scanningArea').classList.add('hidden');
   document.getElementById('drawArea').classList.remove('hidden');
-  document.getElementById('btnDraw').disabled = true;
+  document.getElementById('btnDraw').disabled=true;
   document.getElementById('selConfirm').classList.add('hidden');
-  document.getElementById('drawHint').textContent = 'Loading page preview…';
+  document.getElementById('clearAreasBtn').style.display='none';
+  document.getElementById('selConfirm').className='selection-confirm'+(erase?' erase':'');
+  document.getElementById('eraseNoteBanner').classList.toggle('hidden',!erase);
+  document.getElementById('drawHint').textContent='Loading page preview…';
 
-  const file = pdfFiles[0];
-  const buf = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-  const page = await pdf.getPage(1);
-  const vpBase = page.getViewport({ scale: 1 });
-  const maxW = document.getElementById('canvasWrap').offsetWidth || 520;
-  const scale = Math.min(1, maxW / vpBase.width);
-  drawPageDims = { w: vpBase.width, h: vpBase.height, scale };
+  // Count total pages for the note
+  let totalPages=0;
+  for(const f of pdfFiles){const b=await f.arrayBuffer();const p=await pdfjsLib.getDocument({data:new Uint8Array(b)}).promise;totalPages+=p.numPages;}
+  const noteEl=document.getElementById('pageCountNote');
+  const pageWord=totalPages===1?'page':'pages';
+  const fileWord=pdfFiles.length===1?'PDF':'PDFs';
+  noteEl.innerHTML=`✓ Showing page 1 of your first PDF. This selection will be applied to <strong>all ${totalPages} ${pageWord}</strong> across all ${pdfFiles.length} ${fileWord}.`;
 
-  const canvas = document.getElementById('pageCanvas');
-  const vp = page.getViewport({ scale });
-  canvas.width = Math.round(vp.width);
-  canvas.height = Math.round(vp.height);
-  drawCtx = canvas.getContext('2d');
-  await page.render({ canvasContext: drawCtx, viewport: vp }).promise;
-  drawPageImage = drawCtx.getImageData(0, 0, canvas.width, canvas.height);
+  const file=pdfFiles[0];
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+  const page=await pdf.getPage(1);
+  const vp0=page.getViewport({scale:1});
+  const maxW=document.getElementById('canvasWrap').offsetWidth||520;
+  const scale=Math.min(1,maxW/vp0.width);
+  drawPageDims={w:vp0.width,h:vp0.height,scale};
 
-  document.getElementById('drawHint').textContent = 'Click and drag to draw a box around the logo';
+  const canvas=document.getElementById('pageCanvas');
+  const vp=page.getViewport({scale});
+  canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+  drawCtx=canvas.getContext('2d');
+  await page.render({canvasContext:drawCtx,viewport:vp}).promise;
+  drawPageImage=drawCtx.getImageData(0,0,canvas.width,canvas.height);
+  document.getElementById('drawHint').textContent=erase
+    ?'Draw a box around the area you want to remove'
+    :'Draw a box around where you want the new logo placed';
 
-  // Mouse events
-  canvas.onmousedown = e => {
-    isDrawing = true;
-    drawStart = getCanvasPos(canvas, e);
-    drawEnd = { ...drawStart };
-  };
-  canvas.onmousemove = e => {
-    if (!isDrawing) return;
-    drawEnd = getCanvasPos(canvas, e);
-    redrawSelection();
-  };
-  canvas.onmouseup = e => {
-    if (!isDrawing) return;
-    isDrawing = false;
-    drawEnd = getCanvasPos(canvas, e);
-    redrawSelection();
-    finalizeDrawSelection();
-  };
-  // Touch
-  canvas.ontouchstart = e => { e.preventDefault(); canvas.onmousedown(e.touches[0]); };
-  canvas.ontouchmove  = e => { e.preventDefault(); canvas.onmousemove(e.touches[0]); };
-  canvas.ontouchend   = e => { e.preventDefault(); canvas.onmouseup(e.changedTouches[0]); };
+  canvas.onmousedown=e=>{isDrawing=true;drawStart=getPos(canvas,e);drawEnd={...drawStart};};
+  canvas.onmousemove=e=>{if(!isDrawing)return;drawEnd=getPos(canvas,e);redrawSel();};
+  canvas.onmouseup  =e=>{if(!isDrawing)return;isDrawing=false;drawEnd=getPos(canvas,e);redrawSel();finalizeSel();};
+  canvas.ontouchstart=e=>{e.preventDefault();canvas.onmousedown(e.touches[0]);};
+  canvas.ontouchmove =e=>{e.preventDefault();canvas.onmousemove(e.touches[0]);};
+  canvas.ontouchend  =e=>{e.preventDefault();canvas.onmouseup(e.changedTouches[0]);};
 }
 
-function getCanvasPos(canvas, e) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: (e.clientX - rect.left) * (canvas.width / rect.width),
-    y: (e.clientY - rect.top)  * (canvas.height / rect.height)
-  };
+function getPos(canvas, e){
+  const r=canvas.getBoundingClientRect();
+  return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)};
 }
-
-function redrawSelection() {
-  if (!drawPageImage || !drawStart || !drawEnd) return;
-  drawCtx.putImageData(drawPageImage, 0, 0);
-  const x = Math.min(drawStart.x, drawEnd.x);
-  const y = Math.min(drawStart.y, drawEnd.y);
-  const w = Math.abs(drawEnd.x - drawStart.x);
-  const h = Math.abs(drawEnd.y - drawStart.y);
-  drawCtx.fillStyle = 'rgba(37,99,235,0.15)';
-  drawCtx.fillRect(x, y, w, h);
-  drawCtx.strokeStyle = '#2563eb';
-  drawCtx.lineWidth = 2;
-  drawCtx.strokeRect(x, y, w, h);
-  drawCtx.fillStyle = '#2563eb';
+function drawBox(x,y,w,h,alpha){
+  const color=eraseMode?`rgba(220,38,38,${alpha})`:`rgba(37,99,235,${alpha})`;
+  const stroke=eraseMode?'#dc2626':'#2563eb';
+  drawCtx.fillStyle=color;drawCtx.fillRect(x,y,w,h);
+  drawCtx.strokeStyle=stroke;drawCtx.lineWidth=2;drawCtx.strokeRect(x,y,w,h);
+  drawCtx.fillStyle=stroke;
   [[x,y],[x+w,y],[x,y+h],[x+w,y+h]].forEach(([cx,cy])=>drawCtx.fillRect(cx-4,cy-4,8,8));
 }
-
-function finalizeDrawSelection() {
-  if (!drawStart || !drawEnd) return;
-  const { w: pageW, h: pageH, scale } = drawPageDims;
-  const x1 = Math.min(drawStart.x, drawEnd.x);
-  const y1 = Math.min(drawStart.y, drawEnd.y);
-  const x2 = Math.max(drawStart.x, drawEnd.x);
-  const y2 = Math.max(drawStart.y, drawEnd.y);
-  const pw = x2 - x1, ph = y2 - y1;
-  if (pw < 8 || ph < 8) {
-    document.getElementById('drawHint').textContent = 'Too small — drag a bigger area and try again';
-    return;
+function redrawSel(){
+  if(!drawPageImage)return;
+  drawCtx.putImageData(drawPageImage,0,0);
+  const{w:pW,h:pH,scale}=drawPageDims;
+  // Draw all confirmed boxes (more opaque)
+  for(const b of manualBoundsArray){
+    const cx=b.x*scale, cy=(pH-b.y-b.h)*scale, cw=b.w*scale, ch=b.h*scale;
+    drawBox(cx,cy,cw,ch,0.25);
+    // Label each box
+    drawCtx.fillStyle=eraseMode?'#dc2626':'#2563eb';
+    drawCtx.font='bold 11px sans-serif';
+    drawCtx.fillText('Area '+(manualBoundsArray.indexOf(b)+1), cx+4, cy+13);
   }
-  // Convert canvas pixels → PDF user space
-  manualBounds = {
-    x: x1 / scale,
-    y: pageH - y2 / scale,   // flip y: PDF origin is bottom-left
-    w: pw / scale,
-    h: ph / scale
-  };
-  document.getElementById('selDims').textContent =
-    `${Math.round(manualBounds.w)} × ${Math.round(manualBounds.h)} pt`;
-  document.getElementById('selConfirm').classList.remove('hidden');
-  document.getElementById('btnDraw').disabled = false;
-  document.getElementById('drawHint').textContent = 'Drag again to adjust';
+  // Draw current in-progress box (lighter)
+  if(drawStart&&drawEnd&&isDrawing){
+    const x=Math.min(drawStart.x,drawEnd.x),y=Math.min(drawStart.y,drawEnd.y);
+    const w=Math.abs(drawEnd.x-drawStart.x),h=Math.abs(drawEnd.y-drawStart.y);
+    drawBox(x,y,w,h,0.12);
+  }
 }
-
-function confirmDraw() {
-  if (!manualBounds) return;
+function finalizeSel(){
+  if(!drawStart||!drawEnd)return;
+  const{w:pW,h:pH,scale}=drawPageDims;
+  const x1=Math.min(drawStart.x,drawEnd.x),y1=Math.min(drawStart.y,drawEnd.y);
+  const x2=Math.max(drawStart.x,drawEnd.x),y2=Math.max(drawStart.y,drawEnd.y);
+  if(x2-x1<8||y2-y1<8){document.getElementById('drawHint').textContent='Too small — try again with a larger area';return;}
+  manualBoundsArray.push({x:x1/scale,y:pH-y2/scale,w:(x2-x1)/scale,h:(y2-y1)/scale});
+  redrawSel();
+  const n=manualBoundsArray.length;
+  const word=n===1?'area':'areas';
+  document.getElementById('selDims').textContent=`${n} ${word} selected`;
+  document.getElementById('selConfirm').classList.remove('hidden');
+  document.getElementById('btnDraw').disabled=false;
+  document.getElementById('clearAreasBtn').style.display='inline';
+  document.getElementById('drawHint').textContent=`${n} ${word} marked — draw another or click Continue`;
+}
+function clearAllAreas(){
+  manualBoundsArray=[];
+  if(drawPageImage)drawCtx.putImageData(drawPageImage,0,0);
+  document.getElementById('selConfirm').classList.add('hidden');
+  document.getElementById('btnDraw').disabled=true;
+  document.getElementById('drawHint').textContent='All areas cleared — draw again';
+}
+function confirmDraw(){
+  if(!manualBoundsArray.length)return;
   goStep3();
 }
 
-// ── Step 3: Logo upload ───────────────────────────────────────────────────
-(function() {
-  const dz = document.getElementById('logoDz');
-  const inp = document.getElementById('logoIn');
-  dz.addEventListener('click', () => inp.click());
-  inp.addEventListener('change', e => handleLogo(e.target.files[0]));
-  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
-  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
-  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); handleLogo(e.dataTransfer.files[0]); });
+// ── Step 3: Logo upload ─────────────────────────────────────────────────────
+(function(){
+  const dz=document.getElementById('logoDz'),inp=document.getElementById('logoIn');
+  dz.addEventListener('click',()=>inp.click());
+  inp.addEventListener('change',e=>handleLogo(e.target.files[0]));
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');handleLogo(e.dataTransfer.files[0]);});
 })();
 
-function handleLogo(file) {
-  if (!file) return;
-  setErr('logoErr', null);
-  if (!['image/png','image/jpeg'].includes(file.type)) {
-    setErr('logoErr', 'Logo must be PNG or JPG.', 'logoErrTxt'); return;
-  }
-  if (logoURL) URL.revokeObjectURL(logoURL);
-  logoFile = file; logoURL = URL.createObjectURL(file);
-  document.getElementById('logoPreviewImg').src = logoURL;
-  document.getElementById('summaryLogoImg').src = logoURL;
-  document.getElementById('logoFname').textContent = file.name;
-  document.getElementById('logoFsize').textContent = fmtSize(file.size);
+function handleLogo(file){
+  if(!file)return;
+  setErr('logoErr',null);
+  if(!['image/png','image/jpeg'].includes(file.type)){setErr('logoErr','Logo must be PNG or JPG.','logoErrTxt');return;}
+  if(logoURL)URL.revokeObjectURL(logoURL);
+  logoFile=file;logoURL=URL.createObjectURL(file);
+  document.getElementById('logoPreviewImg').src=logoURL;
+  document.getElementById('summaryLogoImg').src=logoURL;
+  document.getElementById('logoFname').textContent=file.name;
+  document.getElementById('logoFsize').textContent=fmtSize(file.size);
   document.getElementById('logoDzArea').classList.add('hidden');
   document.getElementById('logoPreviewArea').classList.remove('hidden');
   document.getElementById('summaryLogoBox').classList.remove('hidden');
-  document.getElementById('btn3').disabled = false;
+  document.getElementById('btn3Replace').disabled=false;
 }
-
-function clearLogo() {
-  if (logoURL) URL.revokeObjectURL(logoURL);
-  logoFile = null; logoURL = null;
+function clearLogo(){
+  if(logoURL)URL.revokeObjectURL(logoURL);
+  logoFile=null;logoURL=null;
   document.getElementById('logoDzArea').classList.remove('hidden');
   document.getElementById('logoPreviewArea').classList.add('hidden');
   document.getElementById('summaryLogoBox').classList.add('hidden');
-  document.getElementById('btn3').disabled = true;
-  document.getElementById('logoIn').value = '';
+  document.getElementById('btn3Replace').disabled=true;
+  document.getElementById('logoIn').value='';
 }
-
-function setProcState(s) {
-  ['Idle','Running','Done','Error'].forEach(x =>
-    document.getElementById('state'+x).classList.add('hidden'));
+function setProcState(s){
+  ['Idle','Running','Done','Error'].forEach(x=>document.getElementById('state'+x).classList.add('hidden'));
   document.getElementById('state'+s.charAt(0).toUpperCase()+s.slice(1)).classList.remove('hidden');
 }
 
-// ── PDF processing ─────────────────────────────────────────────────────────
-async function processSingleFile(file, fileIdx, logoBuf, logoMime) {
-  if (typeof PDFLib === 'undefined') throw new Error('PDF library not loaded. Refresh and try again.');
-  const { PDFDocument, rgb } = PDFLib;
+// ── Processing ──────────────────────────────────────────────────────────────
+async function processSingleFile(file, fileIdx, logoBuf, logoMime){
+  if(!eraseMode && typeof PDFLib==='undefined') throw new Error('PDF library not loaded. Refresh and try again.');
+  const{PDFDocument,rgb}=PDFLib;
 
-  const updateProg = (pct) => {
-    const overall = Math.round(((fileIdx + pct/100) / pdfFiles.length) * 100);
-    document.getElementById('procBar').style.width = overall+'%';
-    document.getElementById('procPct').textContent = overall+'%';
-    document.getElementById('procLabel').textContent = `Processing file ${fileIdx+1} of ${pdfFiles.length}…`;
-    document.getElementById('procFname').textContent = file.name;
+  const upd=(pct)=>{
+    const overall=Math.round(((fileIdx+pct/100)/pdfFiles.length)*100);
+    document.getElementById('procBar').style.width=overall+'%';
+    document.getElementById('procPct').textContent=overall+'%';
+    document.getElementById('procLabel').textContent=`Processing file ${fileIdx+1} of ${pdfFiles.length}…`;
+    document.getElementById('procFname').textContent=file.name;
   };
 
-  updateProg(5);
-  const pdfBuf = await file.arrayBuffer();
-  const doc = await PDFDocument.load(pdfBuf);
-  let logoImg;
-  if (logoMime==='image/png') logoImg = await doc.embedPng(logoBuf.slice(0));
-  else logoImg = await doc.embedJpg(logoBuf.slice(0));
-  updateProg(25);
+  upd(5);
+  const pdfBuf=await file.arrayBuffer();
+  const doc=await PDFDocument.load(pdfBuf);
 
-  const pages = doc.getPages();
-
-  for (let i = 0; i < pages.length; i++) {
-    const page = pages[i];
-    const pageNum = i + 1;
-    let boundsToReplace = [];
-
-    if (drawMode && manualBounds) {
-      // Manual selection: apply to every page
-      boundsToReplace = [manualBounds];
-    } else {
-      // Scan-based: only apply to detected positions
-      const selectedBounds = [...selectedIds]
-        .map(id => uniqueImages.find(u=>u.id===id)?.bound).filter(Boolean);
-      boundsToReplace = scanResults
-        .filter(r => r.fileIdx===fileIdx && r.pageNum===pageNum)
-        .filter(r => selectedBounds.some(sel=>sameSize(sel, r.bound)))
-        .map(r => r.bound);
-    }
-
-    for (const b of boundsToReplace) {
-      page.drawRectangle({ x:b.x, y:b.y, width:b.w, height:b.h, color:rgb(1,1,1), borderWidth:0 });
-      page.drawImage(logoImg, { x:b.x, y:b.y, width:b.w, height:b.h });
-    }
-
-    updateProg(25 + ((i+1)/pages.length)*70);
+  let logoImg=null;
+  if(!eraseMode&&logoBuf){
+    logoImg=logoMime==='image/png'?await doc.embedPng(logoBuf.slice(0)):await doc.embedJpg(logoBuf.slice(0));
   }
+  upd(25);
 
+  const pages=doc.getPages();
+  for(let i=0;i<pages.length;i++){
+    const page=pages[i],pageNum=i+1;
+    let boundsToProcess=[];
+
+    if(drawMode&&manualBoundsArray.length){
+      boundsToProcess=[...manualBoundsArray];
+    }else{
+      const selBounds=[...selectedIds].map(id=>uniqueImages.find(u=>u.id===id)?.bound).filter(Boolean);
+      boundsToProcess=scanResults
+        .filter(r=>r.fileIdx===fileIdx&&r.pageNum===pageNum)
+        .filter(r=>selBounds.some(sel=>sameSize(sel,r.bound)))
+        .map(r=>r.bound);
+    }
+
+    for(const b of boundsToProcess){
+      // Always white out the area first
+      page.drawRectangle({x:b.x,y:b.y,width:b.w,height:b.h,color:rgb(1,1,1),borderWidth:0});
+
+      if(!eraseMode&&logoImg){
+        // Scale to FIT — preserve aspect ratio, center within the drawn area
+        const logoAspect=logoImg.width/logoImg.height;
+        const boxAspect=b.w/b.h;
+        let dw,dh;
+        if(logoAspect>boxAspect){
+          // Logo is wider than box — fit to width
+          dw=b.w;dh=b.w/logoAspect;
+        }else{
+          // Logo is taller — fit to height
+          dh=b.h;dw=b.h*logoAspect;
+        }
+        // Center within the box
+        const dx=b.x+(b.w-dw)/2;
+        const dy=b.y+(b.h-dh)/2;
+        page.drawImage(logoImg,{x:dx,y:dy,width:dw,height:dh});
+      }
+      // If eraseMode: just the white rectangle above — nothing more
+    }
+    upd(25+((i+1)/pages.length)*70);
+  }
   return await doc.save();
 }
 
-async function startProcess() {
-  if (!logoFile) return;
+async function startProcess(){
+  if(!eraseMode&&!logoFile)return;
   setProcState('running');
-  processedFiles = [];
-  try {
-    const logoBuf = await logoFile.arrayBuffer();
-    for (let i = 0; i < pdfFiles.length; i++) {
-      const bytes = await processSingleFile(pdfFiles[i], i, logoBuf, logoFile.type);
-      processedFiles.push({ name: pdfFiles[i].name.replace(/\.pdf$/i,'')+'_new-logo.pdf', bytes });
+  processedFiles=[];
+  try{
+    const logoBuf=logoFile?await logoFile.arrayBuffer():null;
+    for(let i=0;i<pdfFiles.length;i++){
+      const bytes=await processSingleFile(pdfFiles[i],i,logoBuf,logoFile?.type);
+      processedFiles.push({name:pdfFiles[i].name.replace(/\.pdf$/i,'')+(eraseMode?'_erased':'_new-logo')+'.pdf',bytes});
     }
-    document.getElementById('successTitle').textContent =
-      `${pdfFiles.length} file${pdfFiles.length>1?'s':''} processed`;
-    document.getElementById('dlBtnLabel').textContent =
-      pdfFiles.length>1 ? 'Download ZIP' : 'Download PDF';
+    document.getElementById('successTitle').textContent=`${pdfFiles.length} file${pdfFiles.length>1?'s':''} processed`;
+    document.getElementById('successSub').textContent=eraseMode?'Selected area removed from all pages':'Logo replaced on all pages';
+    document.getElementById('dlBtnLabel').textContent=pdfFiles.length>1?'Download ZIP':'Download PDF';
     setProcState('done');
-  } catch(err) {
-    document.getElementById('procErrDetail').textContent = err.message || 'Unknown error.';
+  }catch(err){
+    document.getElementById('procErrDetail').textContent=err.message||'Unknown error.';
     setProcState('error');
   }
 }
 
-// ── Download ───────────────────────────────────────────────────────────────
-async function doDownload() {
-  if (processedFiles.length===1) {
-    triggerDL(new Blob([processedFiles[0].bytes],{type:'application/pdf'}), processedFiles[0].name);
-  } else {
-    const zip = new JSZip();
+// ── Download ────────────────────────────────────────────────────────────────
+async function doDownload(){
+  if(processedFiles.length===1){
+    triggerDL(new Blob([processedFiles[0].bytes],{type:'application/pdf'}),processedFiles[0].name);
+  }else{
+    const zip=new JSZip();
     processedFiles.forEach(f=>zip.file(f.name,f.bytes));
-    const blob = await zip.generateAsync({type:'blob',compression:'DEFLATE'});
+    const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
     triggerDL(blob,'processed_pdfs.zip');
   }
 }
-
-function triggerDL(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = Object.assign(document.createElement('a'),{href:url,download:filename});
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+function triggerDL(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=Object.assign(document.createElement('a'),{href:url,download:filename});
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-// ── Reset & utils ──────────────────────────────────────────────────────────
-function resetAll() {
-  pdfFiles=[]; if(logoURL)URL.revokeObjectURL(logoURL);
-  logoFile=null; logoURL=null; scanResults=[]; uniqueImages=[];
-  selectedIds.clear(); processedFiles=[];
-  drawMode=false; manualBounds=null; drawPageImage=null;
+// ── Reset ────────────────────────────────────────────────────────────────────
+function resetAll(){
+  pdfFiles=[];if(logoURL)URL.revokeObjectURL(logoURL);
+  logoFile=null;logoURL=null;scanResults=[];uniqueImages=[];
+  selectedIds.clear();processedFiles=[];
+  drawMode=false;eraseMode=false;manualBoundsArray=[];drawPageImage=null;
   document.getElementById('pdfList').innerHTML='';
   document.getElementById('btn1').disabled=true;
   document.getElementById('pdfIn').value='';
@@ -890,15 +895,14 @@ function resetAll() {
   showPanel(1);
 }
 
-function setErr(id, msg, txtId) {
+function setErr(id,msg,txtId){
   document.getElementById(id).classList.toggle('hidden',!msg);
-  if (msg && txtId) document.getElementById(txtId).textContent = msg;
+  if(msg&&txtId)document.getElementById(txtId).textContent=msg;
 }
-
-function fmtSize(b) {
-  if(b<1024) return b+' B';
-  if(b<1048576) return (b/1024).toFixed(1)+' KB';
-  return (b/1048576).toFixed(1)+' MB';
+function fmtSize(b){
+  if(b<1024)return b+' B';
+  if(b<1048576)return(b/1024).toFixed(1)+' KB';
+  return(b/1048576).toFixed(1)+' MB';
 }
 
 renderSteps();
