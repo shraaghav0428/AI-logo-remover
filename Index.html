@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Logo Replacer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #fff; color: #111; min-height: 100vh; }
+
+    /* ── Layout ── */
+    .header { border-bottom: 1px solid #f0f0f0; padding: 14px 24px; }
+    .header-inner { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .app-title { font-size: 14px; font-weight: 600; }
+    .app-sub { font-size: 11px; color: #9ca3af; margin-top: 1px; }
+    .main { max-width: 560px; margin: 0 auto; padding: 36px 24px 100px; }
+
+    /* ── Step indicator ── */
+    .steps { display: flex; align-items: center; justify-content: center; max-width: 440px; margin: 0 auto 36px; }
+    .step { display: flex; flex-direction: column; align-items: center; }
+    .step-dot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; transition: all 0.2s; }
+    .step-dot.done { background: #2563eb; color: #fff; }
+    .step-dot.active { background: #2563eb; color: #fff; box-shadow: 0 0 0 4px #dbeafe; }
+    .step-dot.todo { background: #f3f4f6; color: #9ca3af; }
+    .step-name { font-size: 11px; font-weight: 500; margin-top: 5px; white-space: nowrap; }
+    .step-name.done-lbl, .step-name.todo-lbl { color: #9ca3af; }
+    .step-name.active-lbl { color: #2563eb; }
+    .step-line { flex: 1; height: 1px; margin: 0 6px; margin-bottom: 18px; }
+    .step-line.done-line { background: #2563eb; }
+    .step-line.todo-line { background: #e5e7eb; }
+
+    /* ── Panels ── */
+    .panel { display: none; }
+    .panel.show { display: block; }
+    .panel h2 { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
+    .panel .sub { font-size: 13px; color: #6b7280; margin-bottom: 22px; }
+
+    /* ── Drop zone ── */
+    .dropzone { border: 2px dashed #e5e7eb; border-radius: 12px; padding: 44px 20px; text-align: center; cursor: pointer; transition: all 0.15s; }
+    .dropzone:hover, .dropzone.over { border-color: #2563eb; background: #eff6ff; }
+    .dz-icon { width: 44px; height: 44px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; transition: background 0.15s; }
+    .dropzone:hover .dz-icon, .dropzone.over .dz-icon { background: #dbeafe; }
+    .dz-main { font-size: 14px; font-weight: 500; color: #374151; }
+    .dz-main span { color: #2563eb; }
+    .dz-hint { font-size: 12px; color: #9ca3af; margin-top: 3px; }
+
+    /* ── File list ── */
+    .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 7px; }
+    .file-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 9px; }
+    .file-ico { width: 30px; height: 30px; background: #fef2f2; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .file-meta { flex: 1; min-width: 0; }
+    .file-name { font-size: 13px; font-weight: 500; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-size { font-size: 11px; color: #9ca3af; }
+    .remove-btn { background: none; border: none; cursor: pointer; color: #d1d5db; padding: 4px; border-radius: 4px; line-height: 0; flex-shrink: 0; }
+    .remove-btn:hover { color: #ef4444; }
+
+    /* ── Buttons ── */
+    .btn { width: 100%; padding: 13px 20px; border-radius: 11px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #1d4ed8; }
+    .btn-primary:active:not(:disabled) { transform: scale(0.99); }
+    .btn-primary:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
+    .btn-outline { background: #fff; color: #374151; border: 1px solid #e5e7eb; }
+    .btn-outline:hover { background: #f9fafb; }
+    .mt20 { margin-top: 20px; }
+    .mt10 { margin-top: 10px; }
+    .btn-row { display: flex; gap: 8px; margin-top: 20px; }
+    .btn-row .btn-outline { flex: 1; }
+    .btn-row .btn-primary { flex: 2; }
+
+    /* ── Error inline ── */
+    .err-inline { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #dc2626; margin-top: 8px; }
+
+    /* ── Scanning progress ── */
+    .scan-progress { margin-bottom: 8px; }
+    .scan-top { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+    .scan-label { color: #374151; }
+    .scan-pct { font-weight: 600; color: #111; }
+    .prog-bg { background: #f3f4f6; border-radius: 99px; height: 5px; overflow: hidden; }
+    .prog-fill { height: 100%; background: #2563eb; border-radius: 99px; transition: width 0.2s ease; width: 0%; }
+    .scan-sub { font-size: 11px; color: #9ca3af; margin-top: 5px; }
+
+    /* ── Thumbnail grid ── */
+    .thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; }
+    .thumb-card { border: 2px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.15s; position: relative; }
+    .thumb-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
+    .thumb-card.selected { border-color: #2563eb; background: #eff6ff; }
+    .thumb-img-wrap { aspect-ratio: 4/3; background: #f9fafb; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px; }
+    .thumb-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .thumb-footer { padding: 6px 8px; background: #fff; border-top: 1px solid #f0f0f0; font-size: 10px; color: #6b7280; line-height: 1.4; }
+    .thumb-check { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; background: #2563eb; border-radius: 50%; display: none; align-items: center; justify-content: center; }
+    .thumb-card.selected .thumb-check { display: flex; }
+    .no-images { text-align: center; padding: 36px 0; }
+    .no-images strong { display: block; font-size: 14px; color: #374151; margin-bottom: 4px; }
+    .no-images p { font-size: 13px; color: #6b7280; }
+    .selection-info { font-size: 13px; color: #374151; margin-top: 14px; line-height: 1.5; }
+    .selection-info strong { color: #2563eb; }
+
+    /* ── Logo preview ── */
+    .logo-card { border: 1px solid #e5e7eb; border-radius: 11px; padding: 14px; }
+    .logo-inner { display: flex; align-items: center; gap: 14px; }
+    .logo-thumb-box { width: 64px; height: 64px; background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .logo-thumb-box img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 4px; }
+    .logo-info { flex: 1; min-width: 0; }
+    .logo-fname { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .logo-fsize { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    .change-btn { background: none; border: none; font-size: 12px; font-weight: 500; color: #2563eb; cursor: pointer; padding: 0; margin-top: 5px; display: block; }
+    .change-btn:hover { text-decoration: underline; }
+
+    /* ── Summary card ── */
+    .summary { background: #f9fafb; border: 1px solid #f0f0f0; border-radius: 11px; padding: 14px; margin-bottom: 18px; }
+    .summary-row { display: flex; align-items: flex-start; gap: 12px; }
+    .summary-logo { width: 48px; height: 48px; background: #fff; border: 1px solid #e5e7eb; border-radius: 7px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .summary-logo img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 3px; }
+    .summary-count { font-size: 11px; color: #9ca3af; font-weight: 500; margin-bottom: 6px; }
+    .summary-files { display: flex; flex-direction: column; gap: 3px; }
+    .summary-file { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #374151; }
+
+    /* ── Process progress ── */
+    .proc-prog { margin-top: 0; }
+    .proc-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .proc-label { font-size: 13px; color: #374151; }
+    .proc-pct { font-size: 13px; font-weight: 600; color: #111; }
+    .proc-fname { font-size: 11px; color: #9ca3af; margin-top: 5px; }
+
+    /* ── Success / error banners ── */
+    .success { display: flex; align-items: center; gap: 12px; padding: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 11px; margin-bottom: 14px; }
+    .success-ico { width: 30px; height: 30px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .success-title { font-size: 13px; font-weight: 500; color: #166534; }
+    .success-sub { font-size: 12px; color: #16a34a; margin-top: 2px; }
+    .err-banner { padding: 13px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 11px; margin-bottom: 14px; }
+    .err-title { font-size: 13px; font-weight: 500; color: #991b1b; }
+    .err-detail { font-size: 12px; color: #dc2626; margin-top: 3px; }
+
+    /* ── Footer ── */
+    .footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #f0f0f0; padding: 9px 20px; text-align: center; }
+    .footer p { font-size: 11px; color: #9ca3af; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-icon">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12"/>
+      </svg>
+    </div>
+    <div>
+      <div class="app-title">PDF Logo Replacer</div>
+      <div class="app-sub">Detect, select and swap logos across PDF files</div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="steps" id="stepBar"></div>
+
+  <!-- ════════════════════════════════════════
+       STEP 1: Upload PDFs
+  ════════════════════════════════════════ -->
+  <div class="panel show" id="panel1">
+    <h2>Upload your PDFs</h2>
+    <p class="sub">Up to 3 files · 10MB per file · 30MB total</p>
+
+    <div class="dropzone" id="pdfDz">
+      <input type="file" id="pdfIn" accept=".pdf" multiple style="display:none">
+      <div class="dz-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+        </svg>
+      </div>
+      <div class="dz-main">Drag & drop PDFs here, or <span>browse files</span></div>
+      <div class="dz-hint">PDF files only</div>
+    </div>
+
+    <div id="pdfErr" class="err-inline hidden">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+      <span id="pdfErrTxt"></span>
+    </div>
+    <div class="file-list" id="pdfList"></div>
+
+    <button class="btn btn-primary mt20" id="btn1" onclick="goStep2()" disabled>
+      Scan for images →
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       STEP 2: Scan & Select
+  ════════════════════════════════════════ -->
+  <div class="panel" id="panel2">
+    <h2>Select images to replace</h2>
+    <p class="sub" id="step2sub">Scanning your PDFs for embedded images…</p>
+
+    <!-- Scanning in progress -->
+    <div id="scanningArea">
+      <div class="scan-progress">
+        <div class="scan-top">
+          <span class="scan-label" id="scanLabel">Starting scan…</span>
+          <span class="scan-pct" id="scanPct">0%</span>
+        </div>
+        <div class="prog-bg"><div class="prog-fill" id="scanBar"></div></div>
+        <div class="scan-sub" id="scanSub"></div>
+      </div>
+      <p style="font-size:13px;color:#6b7280;margin-top:12px;">
+        This may take a moment for large or multi-page files.
+      </p>
+    </div>
+
+    <!-- Results after scanning -->
+    <div id="resultsArea" class="hidden">
+      <div id="thumbGrid" class="thumb-grid"></div>
+      <div id="noImagesMsg" class="no-images hidden">
+        <strong>No embedded images found</strong>
+        <p>These PDFs don't contain any raster images. Logos in CAD files are sometimes vector-based — the AI version can detect those.</p>
+      </div>
+      <p class="selection-info" id="selInfo"></p>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep1()">← Back</button>
+        <button class="btn btn-primary" id="btn2" onclick="goStep3()" disabled>Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       STEP 3: Upload Logo + Process
+  ════════════════════════════════════════ -->
+  <div class="panel" id="panel3">
+    <h2>Upload logo &amp; replace</h2>
+    <p class="sub">Upload your new logo. It replaces only the images you selected.</p>
+
+    <!-- Summary of what will be replaced -->
+    <div class="summary">
+      <div class="summary-row">
+        <div id="summaryLogoBox" class="summary-logo hidden">
+          <img id="summaryLogoImg" src="" alt="logo">
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="summary-count" id="summaryCount"></div>
+          <div class="summary-files" id="summaryFiles"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo upload -->
+    <div id="logoDzArea">
+      <div class="dropzone" id="logoDz">
+        <input type="file" id="logoIn" accept=".png,.jpg,.jpeg,image/png,image/jpeg" style="display:none">
+        <div class="dz-icon">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+          </svg>
+        </div>
+        <div class="dz-main">Drag & drop your logo, or <span>browse</span></div>
+        <div class="dz-hint">PNG or JPG</div>
+      </div>
+    </div>
+
+    <div id="logoPreviewArea" class="hidden">
+      <div class="logo-card">
+        <div class="logo-inner">
+          <div class="logo-thumb-box"><img id="logoPreviewImg" src="" alt="logo"></div>
+          <div class="logo-info">
+            <div class="logo-fname" id="logoFname"></div>
+            <div class="logo-fsize" id="logoFsize"></div>
+            <button class="change-btn" onclick="clearLogo()">Change logo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="logoErr" class="err-inline hidden">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+      <span id="logoErrTxt"></span>
+    </div>
+
+    <!-- Idle state -->
+    <div id="stateIdle" class="mt20">
+      <button class="btn btn-primary" id="btn3" onclick="startProcess()" disabled>Replace logos</button>
+      <button class="btn btn-outline mt10" onclick="goBackToResults()">← Back</button>
+    </div>
+
+    <!-- Processing state -->
+    <div id="stateRunning" class="hidden mt20">
+      <div class="proc-prog">
+        <div class="proc-top">
+          <span class="proc-label" id="procLabel">Processing…</span>
+          <span class="proc-pct" id="procPct">0%</span>
+        </div>
+        <div class="prog-bg"><div class="prog-fill" id="procBar"></div></div>
+        <div class="proc-fname" id="procFname"></div>
+      </div>
+    </div>
+
+    <!-- Done state -->
+    <div id="stateDone" class="hidden mt20">
+      <div class="success">
+        <div class="success-ico">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#16a34a" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <div class="success-title" id="successTitle">Processed successfully</div>
+          <div class="success-sub">Logos replaced on all selected pages</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="doDownload()">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        <span id="dlBtnLabel">Download PDF</span>
+      </button>
+      <button class="btn btn-outline mt10" onclick="resetAll()">Process more files</button>
+    </div>
+
+    <!-- Error state -->
+    <div id="stateError" class="hidden mt20">
+      <div class="err-banner">
+        <div class="err-title">Processing failed</div>
+        <div class="err-detail" id="procErrDetail"></div>
+      </div>
+      <button class="btn btn-primary" onclick="startProcess()">Try again</button>
+      <button class="btn btn-outline mt10" onclick="goBackToResults()">← Back</button>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>All processing happens in your browser — your files never leave your device</p>
+</footer>
+
+<!-- CDN Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let pdfFiles       = [];
+let logoFile       = null;
+let logoURL        = null;
+let scanResults    = [];   // { fileIdx, pageNum, bound, id }
+let uniqueImages   = [];   // deduplicated: { id, bound, thumbnail, fileIdx, pageNum }
+let selectedIds    = new Set();
+let processedFiles = [];
+let currentStep    = 1;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP INDICATOR
+// ─────────────────────────────────────────────────────────────────────────────
+const STEP_LABELS = ['Upload PDFs', 'Select images', 'Replace & download'];
+
+function renderSteps() {
+  const bar = document.getElementById('stepBar');
+  bar.innerHTML = '';
+  STEP_LABELS.forEach((label, i) => {
+    const n = i + 1;
+    const done   = currentStep > n;
+    const active = currentStep === n;
+    const cls    = done ? 'done' : active ? 'active' : 'todo';
+
+    bar.insertAdjacentHTML('beforeend', `
+      <div class="step">
+        <div class="step-dot ${cls}">
+          ${done
+            ? `<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+               </svg>`
+            : n}
+        </div>
+        <div class="step-name ${active ? 'active-lbl' : done ? 'done-lbl' : 'todo-lbl'}">${label}</div>
+      </div>
+    `);
+    if (i < STEP_LABELS.length - 1) {
+      bar.insertAdjacentHTML('beforeend',
+        `<div class="step-line ${done ? 'done-line' : 'todo-line'}"></div>`);
+    }
+  });
+}
+
+function showPanel(n) {
+  currentStep = n;
+  [1, 2, 3].forEach(i =>
+    document.getElementById(`panel${i}`).classList.toggle('show', i === n));
+  renderSteps();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────────────────────────────────────
+function goStep1() { showPanel(1); }
+
+function goStep2() {
+  showPanel(2);
+  document.getElementById('step2sub').textContent =
+    `Scanning ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''} for embedded images…`;
+  document.getElementById('scanningArea').classList.remove('hidden');
+  document.getElementById('resultsArea').classList.add('hidden');
+  scanAllPDFs();
+}
+
+function goBackToResults() {
+  showPanel(2);
+  document.getElementById('scanningArea').classList.add('hidden');
+  document.getElementById('resultsArea').classList.remove('hidden');
+}
+
+function goStep3() {
+  // Populate summary
+  const selCount = selectedIds.size;
+  const totalInstances = countTotalInstances();
+  document.getElementById('summaryCount').textContent =
+    `${selCount} image type${selCount > 1 ? 's' : ''} → ${totalInstances} instance${totalInstances !== 1 ? 's' : ''} across ${pdfFiles.length} PDF${pdfFiles.length > 1 ? 's' : ''}`;
+
+  document.getElementById('summaryFiles').innerHTML = pdfFiles.map(f => `
+    <div class="summary-file">
+      <svg width="12" height="12" fill="#f87171" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+      </svg>
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${f.name}</span>
+    </div>`).join('');
+
+  setProcState('idle');
+  showPanel(3);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 1 — PDF UPLOAD
+// ─────────────────────────────────────────────────────────────────────────────
+(function initPDFZone() {
+  const dz = document.getElementById('pdfDz');
+  const input = document.getElementById('pdfIn');
+  dz.addEventListener('click', () => input.click());
+  input.addEventListener('change', e => addPDFs(Array.from(e.target.files)));
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('over');
+    addPDFs(Array.from(e.dataTransfer.files));
+  });
+})();
+
+function addPDFs(newFiles) {
+  setErr('pdfErr', null);
+  const combined = [...pdfFiles, ...newFiles].slice(0, 3);
+  const err = validatePDFs(combined);
+  if (err) { setErr('pdfErr', err, 'pdfErrTxt'); return; }
+  pdfFiles = combined;
+  renderPDFList();
+  document.getElementById('btn1').disabled = pdfFiles.length === 0;
+}
+
+function validatePDFs(files) {
+  if (files.length > 3) return 'Maximum 3 files allowed.';
+  for (const f of files) {
+    if (!f.name.toLowerCase().endsWith('.pdf')) return `"${f.name}" is not a PDF file.`;
+    if (f.size > 10 * 1024 * 1024) return `"${f.name}" exceeds the 10MB limit.`;
+  }
+  if (files.reduce((s, f) => s + f.size, 0) > 30 * 1024 * 1024)
+    return 'Total size exceeds 30MB.';
+  return null;
+}
+
+function renderPDFList() {
+  document.getElementById('pdfList').innerHTML = pdfFiles.map((f, i) => `
+    <div class="file-row">
+      <div class="file-ico">
+        <svg width="15" height="15" fill="#f87171" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="file-meta">
+        <div class="file-name">${f.name}</div>
+        <div class="file-size">${fmtSize(f.size)}</div>
+      </div>
+      <button class="remove-btn" onclick="removePDF(${i})">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>`).join('');
+}
+
+function removePDF(i) {
+  pdfFiles = pdfFiles.filter((_, idx) => idx !== i);
+  renderPDFList();
+  document.getElementById('btn1').disabled = pdfFiles.length === 0;
+  setErr('pdfErr', null);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 2 — SCAN & SELECT
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Matrix helpers
+function mulMat(m1, m2) {
+  const [a1,b1,c1,d1,e1,f1] = m1;
+  const [a2,b2,c2,d2,e2,f2] = m2;
+  return [
+    a1*a2 + b1*c2, a1*b2 + b1*d2,
+    c1*a2 + d1*c2, c1*b2 + d1*d2,
+    e1*a2 + f1*c2 + e2, e1*b2 + f1*d2 + f2
+  ];
+}
+
+function matBBox(m) {
+  const [a,b,c,d,e,f] = m;
+  const xs = [e, e+a, e+a+c, e+c];
+  const ys = [f, f+b, f+b+d, f+d];
+  const x = Math.min(...xs), y = Math.min(...ys);
+  return { x, y, w: Math.max(...xs)-x, h: Math.max(...ys)-y };
+}
+
+async function getBoundsOnPage(pdf, pageNum) {
+  const page = await pdf.getPage(pageNum);
+  const ops  = await page.getOperatorList();
+  const OPS  = pdfjsLib.OPS;
+  const stack = [];
+  let mat = [1,0,0,1,0,0];
+  const bounds = [];
+
+  for (let i = 0; i < ops.fnArray.length; i++) {
+    const fn   = ops.fnArray[i];
+    const args = ops.argsArray[i];
+    if      (fn === OPS.save)    { stack.push([...mat]); }
+    else if (fn === OPS.restore) { if (stack.length) mat = stack.pop(); }
+    else if (fn === OPS.transform) { mat = mulMat(mat, args); }
+    else if (fn === OPS.paintImageXObject ||
+             fn === OPS.paintInlineImageXObject ||
+             fn === OPS.paintImageMaskXObject) {
+      const bb = matBBox(mat);
+      if (bb.w > 5 && bb.h > 5) bounds.push(bb);
+    }
+  }
+  return { page, bounds };
+}
+
+async function renderThumbnail(page, bound, pageViewportHeight) {
+  const SCALE = 2;
+  const vp = page.getViewport({ scale: SCALE });
+  const canvas = document.createElement('canvas');
+  canvas.width  = vp.width;
+  canvas.height = vp.height;
+  await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+
+  // Convert PDF user-space (origin bottom-left, y-up) → canvas pixels (origin top-left, y-down)
+  const cx = Math.max(0, Math.round(bound.x * SCALE));
+  const cy = Math.max(0, Math.round((pageViewportHeight - bound.y - bound.h) * SCALE));
+  const cw = Math.max(1, Math.round(bound.w * SCALE));
+  const ch = Math.max(1, Math.round(bound.h * SCALE));
+
+  const out = document.createElement('canvas');
+  out.width = cw; out.height = ch;
+  out.getContext('2d').drawImage(canvas, cx, cy, cw, ch, 0, 0, cw, ch);
+  return out.toDataURL('image/png');
+}
+
+function sameSize(b1, b2) {
+  const dw = Math.abs(b1.w - b2.w) / Math.max(b1.w, b2.w, 1);
+  const dh = Math.abs(b1.h - b2.h) / Math.max(b1.h, b2.h, 1);
+  return dw < 0.12 && dh < 0.12;
+}
+
+async function scanAllPDFs() {
+  scanResults  = [];
+  uniqueImages = [];
+  selectedIds.clear();
+  let idCounter = 0;
+
+  // Count total pages for progress
+  const pageCounts = [];
+  for (const file of pdfFiles) {
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+    pageCounts.push(pdf.numPages);
+  }
+  const totalPages = pageCounts.reduce((a, b) => a + b, 0);
+  let scanned = 0;
+
+  for (let fi = 0; fi < pdfFiles.length; fi++) {
+    const file = pdfFiles[fi];
+    const buf  = await file.arrayBuffer();
+    const pdf  = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+    const pageOneVP = (await pdf.getPage(1)).getViewport({ scale: 1 });
+    const pageH = pageOneVP.height;
+
+    for (let pn = 1; pn <= pdf.numPages; pn++) {
+      // Update scanning UI
+      const pct = Math.round((scanned / totalPages) * 100);
+      document.getElementById('scanBar').style.width = pct + '%';
+      document.getElementById('scanPct').textContent = pct + '%';
+      document.getElementById('scanLabel').textContent =
+        `Scanning page ${pn} of ${pdf.numPages}`;
+      document.getElementById('scanSub').textContent =
+        `File ${fi+1} of ${pdfFiles.length}: ${file.name}`;
+
+      // Yield to browser so UI updates
+      await new Promise(r => setTimeout(r, 0));
+
+      const { page, bounds } = await getBoundsOnPage(pdf, pn);
+
+      for (const bound of bounds) {
+        // Render thumbnail only from page 1 (or first occurrence)
+        let thumbnail = null;
+        const isFirstOccurrence = !uniqueImages.some(u => sameSize(u.bound, bound));
+        if (pn === 1 || isFirstOccurrence) {
+          try { thumbnail = await renderThumbnail(page, bound, pageH); } catch(e) {}
+        }
+
+        const id = idCounter++;
+        scanResults.push({ fileIdx: fi, pageNum: pn, bound, id });
+
+        // Deduplicate by size
+        if (!uniqueImages.some(u => sameSize(u.bound, bound))) {
+          uniqueImages.push({ id, bound, thumbnail, fileIdx: fi, pageNum: pn });
+        }
+      }
+      scanned++;
+    }
+  }
+
+  // Wrap up
+  document.getElementById('scanBar').style.width = '100%';
+  document.getElementById('scanPct').textContent = '100%';
+
+  await new Promise(r => setTimeout(r, 300));
+  document.getElementById('scanningArea').classList.add('hidden');
+  document.getElementById('resultsArea').classList.remove('hidden');
+  renderThumbnailGrid();
+}
+
+function renderThumbnailGrid() {
+  const grid = document.getElementById('thumbGrid');
+  const none = document.getElementById('noImagesMsg');
+
+  if (uniqueImages.length === 0) {
+    grid.classList.add('hidden');
+    none.classList.remove('hidden');
+    document.getElementById('selInfo').textContent = '';
+    document.getElementById('btn2').disabled = true;
+    return;
+  }
+
+  none.classList.add('hidden');
+  grid.classList.remove('hidden');
+
+  grid.innerHTML = uniqueImages.map((img, i) => {
+    const instances = scanResults.filter(r => sameSize(r.bound, img.bound)).length;
+    return `
+      <div class="thumb-card" id="tc_${img.id}" onclick="toggleSelect(${img.id})">
+        <div class="thumb-img-wrap">
+          ${img.thumbnail
+            ? `<img src="${img.thumbnail}" alt="image ${i+1}">`
+            : `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.5">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
+               </svg>`}
+        </div>
+        <div class="thumb-footer">
+          ${Math.round(img.bound.w)} × ${Math.round(img.bound.h)} pt<br>
+          Found on ${instances} page${instances !== 1 ? 's' : ''}
+        </div>
+        <div class="thumb-check">
+          <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+      </div>`;
+  }).join('');
+
+  updateSelectionInfo();
+}
+
+function toggleSelect(id) {
+  if (selectedIds.has(id)) {
+    selectedIds.delete(id);
+    document.getElementById(`tc_${id}`)?.classList.remove('selected');
+  } else {
+    selectedIds.add(id);
+    document.getElementById(`tc_${id}`)?.classList.add('selected');
+  }
+  updateSelectionInfo();
+}
+
+function countTotalInstances() {
+  return [...selectedIds].reduce((sum, id) => {
+    const img = uniqueImages.find(u => u.id === id);
+    if (!img) return sum;
+    return sum + scanResults.filter(r => sameSize(r.bound, img.bound)).length;
+  }, 0);
+}
+
+function updateSelectionInfo() {
+  const n = selectedIds.size;
+  const infoEl = document.getElementById('selInfo');
+  if (n === 0) {
+    infoEl.innerHTML = 'Tap an image above to select it for replacement.';
+  } else {
+    const total = countTotalInstances();
+    infoEl.innerHTML =
+      `<strong>${n}</strong> image type${n > 1 ? 's' : ''} selected — will replace <strong>${total}</strong> instance${total !== 1 ? 's' : ''} across all pages`;
+  }
+  document.getElementById('btn2').disabled = n === 0;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 3 — LOGO UPLOAD + PROCESS
+// ─────────────────────────────────────────────────────────────────────────────
+(function initLogoZone() {
+  const dz    = document.getElementById('logoDz');
+  const input = document.getElementById('logoIn');
+  dz.addEventListener('click', () => input.click());
+  input.addEventListener('change', e => handleLogo(e.target.files[0]));
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('over');
+    handleLogo(e.dataTransfer.files[0]);
+  });
+})();
+
+function handleLogo(file) {
+  if (!file) return;
+  setErr('logoErr', null);
+  if (!['image/png','image/jpeg'].includes(file.type)) {
+    setErr('logoErr', 'Logo must be a PNG or JPG file.', 'logoErrTxt');
+    return;
+  }
+  if (logoURL) URL.revokeObjectURL(logoURL);
+  logoFile = file;
+  logoURL  = URL.createObjectURL(file);
+
+  document.getElementById('logoPreviewImg').src  = logoURL;
+  document.getElementById('summaryLogoImg').src  = logoURL;
+  document.getElementById('logoFname').textContent = file.name;
+  document.getElementById('logoFsize').textContent = fmtSize(file.size);
+  document.getElementById('logoDzArea').classList.add('hidden');
+  document.getElementById('logoPreviewArea').classList.remove('hidden');
+  document.getElementById('summaryLogoBox').classList.remove('hidden');
+  document.getElementById('btn3').disabled = false;
+}
+
+function clearLogo() {
+  if (logoURL) URL.revokeObjectURL(logoURL);
+  logoFile = null; logoURL = null;
+  document.getElementById('logoDzArea').classList.remove('hidden');
+  document.getElementById('logoPreviewArea').classList.add('hidden');
+  document.getElementById('summaryLogoBox').classList.add('hidden');
+  document.getElementById('btn3').disabled = true;
+  document.getElementById('logoIn').value = '';
+}
+
+function setProcState(s) {
+  ['Idle','Running','Done','Error'].forEach(x =>
+    document.getElementById('state'+x).classList.add('hidden'));
+  document.getElementById('state' + s.charAt(0).toUpperCase() + s.slice(1))
+    .classList.remove('hidden');
+}
+
+function updateProcProgress(fileIdx, pct) {
+  const overall = Math.round(((fileIdx + pct/100) / pdfFiles.length) * 100);
+  document.getElementById('procBar').style.width  = overall + '%';
+  document.getElementById('procPct').textContent  = overall + '%';
+  document.getElementById('procLabel').textContent =
+    `Processing file ${fileIdx+1} of ${pdfFiles.length}…`;
+  document.getElementById('procFname').textContent = pdfFiles[fileIdx]?.name || '';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PDF PROCESSING
+// ─────────────────────────────────────────────────────────────────────────────
+async function processSingleFile(file, fileIdx, logoBuf, logoMime) {
+  const { PDFDocument, rgb } = PDFLib;
+  updateProcProgress(fileIdx, 5);
+
+  const pdfBuf = await file.arrayBuffer();
+
+  // Which bounds did the user select?
+  const selectedBounds = [...selectedIds]
+    .map(id => uniqueImages.find(u => u.id === id)?.bound)
+    .filter(Boolean);
+
+  updateProcProgress(fileIdx, 15);
+  const doc = await PDFDocument.load(pdfBuf);
+
+  // Embed logo once
+  let logoImg;
+  if (logoMime === 'image/png') {
+    logoImg = await doc.embedPng(logoBuf.slice(0));
+  } else {
+    logoImg = await doc.embedJpg(logoBuf.slice(0));
+  }
+
+  updateProcProgress(fileIdx, 30);
+
+  // For each page, find matching images and replace
+  const pages = doc.getPages();
+  const fileScan = scanResults.filter(r => r.fileIdx === fileIdx);
+
+  for (let i = 0; i < pages.length; i++) {
+    const page    = pages[i];
+    const pageNum = i + 1;
+
+    const toReplace = fileScan
+      .filter(r => r.pageNum === pageNum)
+      .filter(r => selectedBounds.some(sel => sameSize(sel, r.bound)));
+
+    for (const r of toReplace) {
+      const b = r.bound;
+      // White rectangle over the original image
+      page.drawRectangle({ x: b.x, y: b.y, width: b.w, height: b.h, color: rgb(1,1,1), borderWidth: 0 });
+      // New logo, centred and fitted within the same bounding box
+      const dims = logoImg.scaleToFit(b.w, b.h);
+      page.drawImage(logoImg, {
+        x: b.x + (b.w - dims.width)  / 2,
+        y: b.y + (b.h - dims.height) / 2,
+        width:  dims.width,
+        height: dims.height
+      });
+    }
+
+    updateProcProgress(fileIdx, 30 + ((i+1)/pages.length) * 65);
+  }
+
+  const bytes = await doc.save();
+  updateProcProgress(fileIdx, 100);
+  return bytes;
+}
+
+async function startProcess() {
+  if (!logoFile || selectedIds.size === 0) return;
+  setProcState('running');
+  processedFiles = [];
+
+  try {
+    const logoBuf = await logoFile.arrayBuffer();
+    for (let i = 0; i < pdfFiles.length; i++) {
+      const bytes = await processSingleFile(pdfFiles[i], i, logoBuf, logoFile.type);
+      const name  = pdfFiles[i].name.replace(/\.pdf$/i, '') + '_new-logo.pdf';
+      processedFiles.push({ name, bytes });
+    }
+
+    document.getElementById('successTitle').textContent =
+      `${pdfFiles.length} file${pdfFiles.length > 1 ? 's' : ''} processed successfully`;
+    document.getElementById('dlBtnLabel').textContent =
+      pdfFiles.length > 1 ? 'Download ZIP' : 'Download PDF';
+    setProcState('done');
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('procErrDetail').textContent = err.message || 'Unknown error.';
+    setProcState('error');
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DOWNLOAD
+// ─────────────────────────────────────────────────────────────────────────────
+async function doDownload() {
+  if (processedFiles.length === 1) {
+    triggerDL(new Blob([processedFiles[0].bytes], { type:'application/pdf' }), processedFiles[0].name);
+  } else {
+    const zip = new JSZip();
+    processedFiles.forEach(f => zip.file(f.name, f.bytes));
+    const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE' });
+    triggerDL(blob, 'processed_pdfs.zip');
+  }
+}
+
+function triggerDL(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a   = Object.assign(document.createElement('a'), { href: url, download: filename });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RESET + UTILS
+// ─────────────────────────────────────────────────────────────────────────────
+function resetAll() {
+  pdfFiles = []; if (logoURL) URL.revokeObjectURL(logoURL);
+  logoFile = null; logoURL = null;
+  scanResults = []; uniqueImages = []; selectedIds.clear(); processedFiles = [];
+  document.getElementById('pdfList').innerHTML = '';
+  document.getElementById('btn1').disabled = true;
+  document.getElementById('pdfIn').value = '';
+  clearLogo();
+  showPanel(1);
+}
+
+function setErr(containerId, msg, textId) {
+  const el = document.getElementById(containerId);
+  el.classList.toggle('hidden', !msg);
+  if (msg && textId) document.getElementById(textId).textContent = msg;
+}
+
+function fmtSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/(1024*1024)).toFixed(1) + ' MB';
+}
+
+// ── Boot
+renderSteps();
+</script>
+</body>
+</html>
